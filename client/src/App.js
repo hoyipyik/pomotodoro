@@ -8,8 +8,12 @@ const App = () =>{
 
   return (
     <div className='flex flex-row h-min'>
-      <div className='bg-gray-100 md:block hidden md:basis-1/5 h-screen overflow-auto '><Sidebar/></div>
-      <div className='md:basis-4/5 basis-full overflow-auto'><Container/></div>
+      <div className='bg-gray-100 lg:block hidden md:basis-1/5 h-screen overflow-auto'>
+        <Sidebar/>
+      </div>
+      <div className='lg:basis-4/5 basis-full overflow-auto h-screen'>
+        <Container/>
+      </div>
     </div>
   )
 }
