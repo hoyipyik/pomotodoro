@@ -27,7 +27,8 @@ const Add = (props) => {
             pomoTimes: 0,
             subTasks: [],
         }
-        itemAddHandler(item)
+        if (taskName!=='')
+            itemAddHandler(item)
         setTaskName('')
     }
 
