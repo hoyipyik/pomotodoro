@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react'
 
 import Sidebar from './components/Sidebar'
-import Container from './containers/Container'
+import {Container} from './containers/Container'
 
 const App = () =>{
-  const [scheduleFlag, setScheduleFlag] = useState(false)
+  // const [scheduleFlag, setScheduleFlag] = useState(false)
 
   return (
     <div className='flex flex-row min-h-fit'>
