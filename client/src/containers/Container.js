@@ -1,8 +1,9 @@
-import React, {useState, createContext} from 'react'
+import React, {useState, createContext, useEffect} from 'react'
 import SubInfo from '../components/SubInfo'
 import Add from '../components/Add'
 import Holder from './Holder'
 import Backdrop from '../components/Backdrop'
+import axios from '../axios'
 
 export const Context = createContext('DefaultValue')
 
@@ -15,6 +16,17 @@ export const Container = (props) => {
     const infoPageHandler = (value) =>{
         setInfoFlag(value)
     }
+
+    useEffect(()=>{
+        axios.get('/todoData.json')
+            .then(res=>{
+                const {data} = res
+                if(data)
+                    setTodoData(data)
+            })
+            .catch(err=>console.log(err))
+    }, [])
+
     /**
      * context function
      */
@@ -38,7 +50,6 @@ export const Container = (props) => {
         const oldData = todoData
         const newData = [...oldData, item]
         setTodoData(newData)
-        // console.log(todoData)
     }
 
     const attributeChangeHandler = (name, value, id) =>{
@@ -52,28 +63,30 @@ export const Container = (props) => {
         setTodoData(newData)
     }
 
-    // const taskNameHandler = () =>{
+    /**
+     * Uploader function Context
+     */
 
-    // }
+    const attributeChangeUploader = (name, value , id)=>{
+        const data = {name, value, id}
+        axios.post('/attributeChange.json', data)
+            .then(res=>{
+                console.log(res)
+            })
+            .catch(err=>console.log(err))
+    }
 
-    // const priorityHandler = () =>{
+    const itemDeleteUploader = (id)=>{
+        const data = {id}
+        axios.post('/itemDelete.json', data)
+            .then(res=>{
+                console.log(res)
+            })
+            .catch(err=>console.log(err))
+    }
 
-    // }
-
-    // const checkedHandler = () =>{
-
-    // }
-
-    // const pomoTimesHandler = () =>{
-
-    // }
-
-    // const subTasksHandler = () =>{
-
-    // }
-
-    const passingContext = {infoIdHandler, itemAddHandler, itemDeleteHandler, attributeChangeHandler}
-        // taskNameHandler, priorityHandler, checkedHandler, pomoTimesHandler, subTasksHandler}
+    const passingContext = {infoIdHandler, itemAddHandler, itemDeleteHandler, attributeChangeHandler,
+        attributeChangeUploader, itemDeleteUploader}
 
     return (
         <div className='container w-full h-screen mx-auto px-10 py-5'>

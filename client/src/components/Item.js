@@ -10,7 +10,8 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
     const gray = {fill:'#7b8088'}
     const seed = [1,1,1,1,1]
 
-    const {infoIdHandler, itemDeleteHandler, attributeChangeHandler} = useContext(Context)
+    const {infoIdHandler, itemDeleteHandler, attributeChangeHandler,
+        attributeChangeUploader, itemDeleteUploader} = useContext(Context)
 
     const pomoIcon = seed.map((e, index)=>{
         const element = <AcUnitIcon key={id+index} style={gray} className='hover:cursor-pointer'
@@ -26,10 +27,12 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
 
     const attributeChangeFunction = (name, value) =>{
         attributeChangeHandler(name, value, id)
+        attributeChangeUploader(name, value, id)
     }
 
     const deleteFunction = () =>{
         itemDeleteHandler(id)
+        itemDeleteUploader(id)
     }
 
     const infoDirectFunction = () =>{

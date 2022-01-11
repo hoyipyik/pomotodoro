@@ -9,7 +9,8 @@ import { Context } from '../containers/Container'
 
 const SubInfo = ({infoSpace, infoPageHandler}) => {
     const {id, taskName, checked, priority, pomoTimes, subTasks} = infoSpace
-    const {itemDeleteHandler, attributeChangeHandler} = useContext(Context)
+    const {itemDeleteHandler, attributeChangeHandler,
+        itemDeleteUploader, attributeChangeUploader} = useContext(Context)
 
     const [inputHolder, setInputHolder] = useState('')
     const ref = createRef()
@@ -60,6 +61,7 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
 
     const deleteFunction = () =>{
         itemDeleteHandler(id)
+        itemDeleteUploader(id)
         infoPageHandler(false)
     }
 
@@ -74,6 +76,7 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
 
     const attributeChangeFunction = (name, value) =>{
         attributeChangeHandler(name, value, id)
+        attributeChangeUploader(name, value, id)
     }
 
     /**

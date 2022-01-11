@@ -1,5 +1,6 @@
 import React, {useState, useContext, useEffect, createRef} from 'react'
 import { Context } from '../containers/Container'
+import axios from '../axios'
 
 const Add = (props) => {
     const [taskName, setTaskName] = useState('')
@@ -60,7 +61,11 @@ const Add = (props) => {
      */
 
     const itemAddUploader = (item) =>{
-        
+        axios.post('/itemAdd.json', item)
+            .then(res=>{
+                console.log(res)
+            })
+            .catch(err=>console.log(err))
     }
 
     return (
