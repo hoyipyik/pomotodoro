@@ -1,10 +1,28 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import { Context } from '../containers/Container'
 
 const Add = (props) => {
     const [taskName, setTaskName] = useState('')
 
     const {itemAddHandler} = useContext(Context)
+
+    useEffect(()=>{
+        const listener = (event) =>{
+            const {activeElement} = document
+            const targetElement = document.getElementById('addInput')
+            if(activeElement === targetElement)
+                if(event.code === 'Enter' || event.code === 'NumpadEnter'){
+                    buttonFunction()
+                    console.log('enter')
+                    event.preventDefault()
+                }     
+        }
+
+        document.addEventListener('keydown', listener)
+        return ()=>{
+            document.removeEventListener('keydown', listener)
+        }
+    }, )
 
     const inputFunction = (e) =>{
         const {value} = e.target
@@ -37,6 +55,7 @@ const Add = (props) => {
             <header>
                 <h1 className='text-2xl font-bold font-sans'>What's Your Plan Today</h1>
                 <input
+                    id='addInput'
                     value={taskName}
                     onChange={inputFunction} 
                     className='lg:w-5/6  px-1 py-1 h-11 my-4  w-full border-2 border-gray-400 focus:border-gray-500 outline-none rounded block'>
