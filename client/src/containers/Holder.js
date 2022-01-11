@@ -12,13 +12,13 @@ const Holder = ({todoData}) => {
     return (
         <div className='container my-4 lg:w-11/12 w-full'>
             {itemList}
-           {/* <Item taskName={'Carve a chip'} priority={true} pomoTimes={2}/>
-           <Item taskName={'Sleep'} checked={true}/>
-           <Item taskName={'Watch Anime'}/>
-           <Item taskName={'Play White Album 2'}/>
-           <Item taskName={'Run'}/>
-           <Item taskName={'Burning roommate\'s computer'}/>
-           <Item taskName={'Learning Magic'}/> */}
+            {/* <Item taskName={'Carve a chip'} priority={true} pomoTimes={2}/>
+            <Item taskName={'Sleep'} checked={true}/>
+            <Item taskName={'Watch Anime'}/>
+            <Item taskName={'Play White Album 2'}/>
+            <Item taskName={'Run'}/>
+            <Item taskName={'Burning roommate\'s computer'}/>
+            <Item taskName={'Learning Magic'}/> */}
            <br/>
         </div>
     )

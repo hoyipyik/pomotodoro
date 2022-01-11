@@ -49,7 +49,7 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
                 className='col-start-3 col-span-9 sm:col-start-2 sm:col-span-10 xl:col-span-8 lg:col-span-7 lg:max-w-7xl lg:-ml-4 xl:-ml-7' 
                 style={{textDecoration: checked ? "line-through" : null,
                 fontWeight: priority ? "bold" : null}}>
-                    {taskName}
+                   {taskName} 
             </div>
             <div className='lg:col-start-9 lg:col-span-3 xl:col-start-10 xl:col-span-2 mx-auto lg:block relative lg:left-7 hidden'>
                 {pomoIcon}

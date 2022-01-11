@@ -7,13 +7,13 @@ import Backdrop from '../components/Backdrop'
 export const Context = createContext('DefaultValue')
 
 export const Container = (props) => {
-    const [infoFlag, setInfoFlag] = useState(true)
+    const [infoFlag, setInfoFlag] = useState(false)
     const [infoSpace, setInfoSpace] = useState({})
     const [infoId, setInfoId] = useState('')
     const [todoData, setTodoData] = useState([])
 
-    const flagHandler = (func, value) =>{
-        func(value)
+    const infoPageHandler = (value) =>{
+        setInfoFlag(value)
     }
     /**
      * context function
@@ -25,6 +25,7 @@ export const Container = (props) => {
             if(e.id===id)
             setInfoSpace(e)
         })
+        infoPageHandler(true)
     }
 
     const itemDeleteHandler = (id) =>{
@@ -79,8 +80,8 @@ export const Container = (props) => {
             <Context.Provider value={passingContext}>
             { infoFlag?
             <div>
-                <SubInfo/>
-                <div onClick={()=>flagHandler(setInfoFlag, false)}>
+                <SubInfo infoSpace={infoSpace} infoPageHandler={infoPageHandler}/>
+                <div onClick={()=>infoPageHandler(false)}>
                     <Backdrop/>
                 </div>
             </div>:null}

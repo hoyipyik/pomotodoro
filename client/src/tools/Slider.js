@@ -13,6 +13,17 @@ function ValueLabelComponent(props) {
     );
   }
 
+const marks = [
+    {
+        value:0,
+        label:0,
+    },
+    {
+        value:5,
+        label:5,
+    }
+]
+
 const Slider = withStyles({
     root: {
       color: '#166ee2',
@@ -37,26 +48,21 @@ const Slider = withStyles({
    
     },
     mark: {
-    //   backgroundColor: '#bfbfbf',
-    //   height: 8,
-    //   width: 1,
-    //   marginTop: -3,
     },
     markActive: {
     //   opacity: 1,
     //   backgroundColor: 'currentColor',
     },
-  })((props) => <Sd color="primary" 
-  {...props}
-  defaultValue={1}
-
-  ValueLabelComponent={ValueLabelComponent}
-  aria-labelledby="discrete-slider"
-  valueLabelDisplay="auto"
-  step={1}
-  marks
-  min={0}
-  max={5}/>)
+  })((props) => <Sd
+    {...props}
+    // defaultValue={1}
+    ValueLabelComponent={ValueLabelComponent}
+    aria-labelledby="discrete-slider"
+    valueLabelDisplay="auto"
+    step={1}
+    marks
+    min={0}
+    max={5}/>)
 
   export default Slider
   
