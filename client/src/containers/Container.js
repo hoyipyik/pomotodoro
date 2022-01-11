@@ -19,12 +19,18 @@ export const Container = (props) => {
      * context function
      */
 
-    const infoIdHandler = () =>{
-
+    const infoIdHandler = (id) =>{
+        setInfoId(id)
+        todoData.forEach(e=>{
+            if(e.id===id)
+            setInfoSpace(e)
+        })
     }
 
-    const itemDeleteHandler = () =>{
-
+    const itemDeleteHandler = (id) =>{
+        const oldData = todoData
+        const newData = oldData.filter((e)=>e.id!==id)
+        setTodoData(newData)
     }
 
     const itemAddHandler = (item) =>{
@@ -34,28 +40,39 @@ export const Container = (props) => {
         // console.log(todoData)
     }
 
-    const taskNameHandler = () =>{
-
+    const attributeChangeHandler = (name, value, id) =>{
+        const oldData = todoData
+        const newData = oldData.map((e, index)=>{
+            if(e.id === id){
+                e[name] = value
+            }
+            return e
+        })
+        setTodoData(newData)
     }
 
-    const priorityHandler = () =>{
+    // const taskNameHandler = () =>{
 
-    }
+    // }
 
-    const checkedHandler = () =>{
+    // const priorityHandler = () =>{
 
-    }
+    // }
 
-    const pomoTimesHandler = () =>{
+    // const checkedHandler = () =>{
 
-    }
+    // }
 
-    const subTasksHandler = () =>{
+    // const pomoTimesHandler = () =>{
 
-    }
+    // }
 
-    const passingContext = {infoIdHandler, itemAddHandler, itemDeleteHandler, 
-        taskNameHandler, priorityHandler, checkedHandler, pomoTimesHandler, subTasksHandler}
+    // const subTasksHandler = () =>{
+
+    // }
+
+    const passingContext = {infoIdHandler, itemAddHandler, itemDeleteHandler, attributeChangeHandler}
+        // taskNameHandler, priorityHandler, checkedHandler, pomoTimesHandler, subTasksHandler}
 
     return (
         <div className='container w-full h-screen mx-auto px-10 py-5'>

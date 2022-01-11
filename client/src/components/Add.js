@@ -13,7 +13,7 @@ const Add = (props) => {
             if(activeElement === targetElement)
                 if(event.code === 'Enter' || event.code === 'NumpadEnter'){
                     buttonFunction()
-                    console.log('enter')
+                    // console.log('enter')
                     event.preventDefault()
                 }     
         }
@@ -58,7 +58,7 @@ const Add = (props) => {
                     id='addInput'
                     value={taskName}
                     onChange={inputFunction} 
-                    className='lg:w-5/6  px-1 py-1 h-11 my-4  w-full border-2 border-gray-400 focus:border-gray-500 outline-none rounded block'>
+                    className='lg:w-5/6  px-2 py-1 h-11 my-4  w-full border-2 border-gray-400 focus:border-gray-500 outline-none rounded block'>
                 </input>
                 <button 
                     onClick={buttonFunction}
