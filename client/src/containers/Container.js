@@ -2,13 +2,14 @@ import React, {useState, createContext, useEffect} from 'react'
 import SubInfo from '../components/SubInfo'
 import Add from '../components/Add'
 import Holder from './Holder'
-import Backdrop from '../components/Backdrop'
+import Backdrop from '../tools/Backdrop'
 import axios from '../axios'
 
 export const Context = createContext('DefaultValue')
 
 export const Container = (props) => {
     const [infoFlag, setInfoFlag] = useState(false)
+    const [onlineMode, setOnlineMode] = useState(false)
     const [infoSpace, setInfoSpace] = useState({})
     const [infoId, setInfoId] = useState('')
     const [todoData, setTodoData] = useState([])
@@ -18,14 +19,27 @@ export const Container = (props) => {
     }
 
     useEffect(()=>{
-        axios.get('/todoData.json')
-            .then(res=>{
-                const {data} = res
-                if(data)
-                    setTodoData(data)
-            })
-            .catch(err=>console.log(err))
+        if(onlineMode){
+            axios.get('/todoData.json')
+                .then(res=>{
+                    const {data} = res
+                    if(data)
+                        setTodoData(data)
+                })
+                .catch(err=>console.log(err))
+        }else{
+            const localTodoData = JSON.parse(localStorage.getItem('localTodoData'))
+            if(localTodoData){
+                setTodoData(localTodoData)
+            }
+        }
     }, [])
+
+    useEffect(()=>{
+        if(!onlineMode){
+            localStorage.setItem("localTodoData", JSON.stringify(todoData))
+        }
+    }, [todoData])
 
     /**
      * context function

@@ -49,7 +49,7 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
             </div>
             <div 
                 onClick={()=>attributeChangeFunction('priority', !priority)}
-                className='col-start-3 col-span-9 sm:col-start-2 sm:col-span-10 xl:col-span-8 lg:col-span-7 lg:max-w-7xl lg:-ml-4 xl:-ml-7' 
+                className=' pt-px col-start-3 col-span-9 sm:col-start-2 sm:col-span-10 xl:col-span-8 lg:col-span-7 lg:max-w-7xl lg:-ml-4 xl:-ml-7' 
                 style={{textDecoration: checked ? "line-through" : null,
                 fontWeight: priority ? "bold" : null}}>
                    {taskName} 

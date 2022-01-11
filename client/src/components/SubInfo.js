@@ -51,7 +51,8 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
         // console.log(length,'subtask-length')
         if(length<5){
             const newData = [...oldData, item]
-            attributeChangeFunction('subTasks', newData)
+            if(inputHolder!=='')
+                attributeChangeFunction('subTasks', newData)
             setInputHolder('')
         }else{
             setInputHolder('')

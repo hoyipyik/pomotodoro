@@ -24,7 +24,7 @@ const SubItem = ({id, subTaskName, checked,
             </div>
             <div 
                 style={{textDecoration : checked ? 'line-through':null}}
-                className='col-start-4 sm:col-start-3 lg:col-start-3 xl:col-start-2  col-span-7 lg:max-w-7xl'
+                className='pt-px col-start-4 sm:col-start-3 lg:col-start-3 relative xl:right-4  col-span-7 lg:max-w-7xl'
                 >
                 {subTaskName}
             </div>
