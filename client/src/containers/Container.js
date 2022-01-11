@@ -71,7 +71,7 @@ export const Container = (props) => {
         const data = {name, value, id}
         axios.post('/attributeChange.json', data)
             .then(res=>{
-                console.log(res)
+                // console.log(res)
             })
             .catch(err=>console.log(err))
     }
@@ -80,7 +80,7 @@ export const Container = (props) => {
         const data = {id}
         axios.post('/itemDelete.json', data)
             .then(res=>{
-                console.log(res)
+                // console.log(res)
             })
             .catch(err=>console.log(err))
     }
