@@ -11,7 +11,6 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
     const seed = [1,1,1,1,1]
 
     const {infoIdHandler, itemDeleteHandler, attributeChangeHandler} = useContext(Context)
-        // priorityHandler, checkedHandler, pomoTimesHandler} = useContext(Context)
 
     const pomoIcon = seed.map((e, index)=>{
         const element = <AcUnitIcon key={id+index} style={gray} className='hover:cursor-pointer'
@@ -24,18 +23,6 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
         else 
             return element
     })
-
-    // const checkedFunction = () =>{
-
-    // }
-
-    // const priorityFunction = () =>{
-
-    // }
-
-    // const pomoTimesFunction = () =>{
-
-    // }
 
     const attributeChangeFunction = (name, value) =>{
         attributeChangeHandler(name, value, id)
