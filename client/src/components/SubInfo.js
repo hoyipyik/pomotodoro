@@ -56,7 +56,8 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
             setInputHolder('')
         }else{
             setInputHolder('')
-            window.alert("You can't splite a task more than 5 parts")
+            if(inputHolder!=='')
+                window.alert("You can't splite a task more than 5 parts")
         } 
     }
 

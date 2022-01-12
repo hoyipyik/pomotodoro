@@ -25,6 +25,7 @@ const App = () =>{
       setPomoMode(pomo)
       setClockMode(clock)
     }
+    return 
   }, [])
 
   useEffect(()=>{
@@ -33,6 +34,7 @@ const App = () =>{
     const clock = clockMode
     const modeFlag = { online, pomo, clock}
     localStorage.setItem('modeFlag', JSON.stringify(modeFlag))
+    return
   }, [onlineMode, pomoMode, clockMode])
   
   //
@@ -71,7 +73,7 @@ const App = () =>{
         <Setting 
           modeChangeHandler={modeChangeHandler}
           pomoMode={pomoMode} clockMode={clockMode}
-          onlineMode={onlineMode} 
+          onlineMode={onlineMode} refreshHandler={refreshHandler}
         />
         <div onClick={()=>settingPageHandler(false)}><Backdrop /></div>
       </div> : null }

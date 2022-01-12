@@ -25,10 +25,10 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
     const setDataFunction = (flag, data, type) =>{
         if(flag){
             setTodoData(data)
-            console.log(data, `${type} todoData load`)
+            console.log(`${type} todoData load`)
         }else {
             setScheduleData(data)
-            console.log(data, `${type} scheduleData load`)
+            console.log(`${type} scheduleData load`)
         }
     }
 
@@ -61,6 +61,7 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
         }else{
             localDataFetchingHandler(flag)
         }
+        return
     }, [refresh, onlineMode])
 
     // set data to localStorage
@@ -72,6 +73,7 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
             const data = flag ? todoData : scheduleData
             localStorage.setItem(tag, JSON.stringify(data))
         }
+        return
     }, [todoData, scheduleData, onlineMode])
 
     /**
@@ -119,7 +121,7 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
             const data = {name, value, id}
             axios.post('/attributeChange.json', data)
                 .then(res=>{
-                    console.log(res, 'update')
+                    console.log('update')
                 })
                 .catch(err=>console.log(err))
         } else{
@@ -132,7 +134,7 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
             const data = {id}
             axios.post('/itemDelete.json', data)
                 .then(res=>{
-                    console.log(res, 'delete')
+                    console.log('delete')
                 })
                 .catch(err=>console.log(err))
         }else{

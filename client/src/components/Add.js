@@ -64,7 +64,7 @@ const Add = ({onlineMode}) => {
         if(onlineMode){
             axios.post('/itemAdd.json', item)
             .then(res=>{
-                console.log(res, 'add')
+                console.log('add')
             })
             .catch(err=>console.log(err))
         }else{
