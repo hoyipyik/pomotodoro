@@ -10,7 +10,7 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
     const gray = {fill:'#7b8088'}
     const seed = [1,1,1,1,1]
 
-    const {infoIdHandler, itemDeleteHandler, attributeChangeHandler,
+    const {infoIdHandler, itemDeleteHandler, attributeChangeHandler, pomoMode, 
         attributeChangeUploader, itemDeleteUploader} = useContext(Context)
 
     const pomoIcon = seed.map((e, index)=>{
@@ -54,9 +54,10 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
                 fontWeight: priority ? "bold" : null}}>
                    {taskName} 
             </div>
+            { pomoMode ?
             <div className='lg:col-start-9 lg:col-span-3 xl:col-start-10 xl:col-span-2 mx-auto lg:block relative lg:left-7 hidden'>
                 {pomoIcon}
-            </div>
+            </div> : null }
             <div className='col-start-12 mx-auto'>
                 <DeleteIcon 
                     onClick={deleteFunction}

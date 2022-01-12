@@ -9,7 +9,7 @@ import { Context } from '../containers/Container'
 
 const SubInfo = ({infoSpace, infoPageHandler}) => {
     const {id, taskName, checked, priority, pomoTimes, subTasks} = infoSpace
-    const {itemDeleteHandler, attributeChangeHandler,
+    const {itemDeleteHandler, attributeChangeHandler, pomoMode, clockMode,
         itemDeleteUploader, attributeChangeUploader} = useContext(Context)
 
     const [inputHolder, setInputHolder] = useState('')
@@ -144,6 +144,7 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
                                 />
                             </div>
                         </div>
+                        { pomoMode ?
                         <div className='my-auto select-none'>
                             <div className='w-2/6 py-2 inline-block'>{tag}</div>
                             <div className='w-3/6 relative top-2 inline-block -mx-2'> 
@@ -154,8 +155,8 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
                                     value={pomoTimes}
                                     onChange={pomoTimesFunction}
                                 />
-                            </div>
-                        </div>
+                            </div> 
+                        </div> : null }
                         <div>
                             <input 
                                 ref={ref}
@@ -179,13 +180,15 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
                         Pomodoro
                     </div>
 
+    const clockClassName = clockMode ? 'grid grid-cols-3 container my-4' : 'grid grid-cols-2 container my-4'
+
     return (
         <div className='absolute z-50 bg-white mx-auto lg:w-8/12 w-5/6 h-5/6 my-8 rounded-xl shadow-md'>            
             <div className='container mx-5 my-4 p-4 w-auto'>
                 {head}
-                <div className='grid grid-cols-3 container my-4'>
+                <div className={clockClassName}>
                     {details}
-                    {pomodoro}
+                    { clockMode ? <div>{pomodoro}</div> : null }
                 </div>
             </div>
             

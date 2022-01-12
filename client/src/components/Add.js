@@ -2,7 +2,7 @@ import React, {useState, useContext, useEffect, createRef} from 'react'
 import { Context } from '../containers/Container'
 import axios from '../axios'
 
-const Add = (props) => {
+const Add = ({onlineMode}) => {
     const [taskName, setTaskName] = useState('')
 
     const {itemAddHandler} = useContext(Context)
@@ -61,11 +61,15 @@ const Add = (props) => {
      */
 
     const itemAddUploader = (item) =>{
-        axios.post('/itemAdd.json', item)
+        if(onlineMode){
+            axios.post('/itemAdd.json', item)
             .then(res=>{
                 console.log(res, 'add')
             })
             .catch(err=>console.log(err))
+        }else{
+            console.log('local add')
+        }
     }
 
     return (

@@ -7,41 +7,72 @@ import axios from '../axios'
 
 export const Context = createContext('DefaultValue')
 
-export const Container = (props) => {
+export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) => {
     const [infoFlag, setInfoFlag] = useState(false)
-    const [onlineMode, setOnlineMode] = useState(true)
     const [infoSpace, setInfoSpace] = useState({})
     const [infoId, setInfoId] = useState('')
     const [todoData, setTodoData] = useState([])
+    const [scheduleData, setScheduleData] = useState([])
 
     const infoPageHandler = (value) =>{
         setInfoFlag(value)
     }
 
-    useEffect(()=>{
-        if(onlineMode){
-            axios.get('/todoData.json')
-                .then(res=>{
-                    const {data} = res
-                    if(data)
-                        setTodoData(data)
-                        console.log(res, 'online todoData load')
-                })
-                .catch(err=>console.log(err))
-        }else{
-            const localTodoData = JSON.parse(localStorage.getItem('localTodoData'))
-            if(localTodoData){
-                setTodoData(localTodoData)
-                console.log(localTodoData, 'localData load')
-            }
+    /**
+     * Data fetching and setting function
+     */
+
+    const setDataFunction = (flag, data, type) =>{
+        if(flag){
+            setTodoData(data)
+            console.log(data, `${type} todoData load`)
+        }else {
+            setScheduleData(data)
+            console.log(data, `${type} scheduleData load`)
         }
-    }, [])
+    }
+
+    const onlineDataFetchingHandler = (flag) =>{
+        let api = flag ? '/todoData.json' : '/scheduleData.json'
+        axios.get(api)
+            .then(res=>{
+                const {data} = res
+                const onlineData = data
+                if(onlineData)
+                    setDataFunction(flag, onlineData, 'online')
+            })
+            .catch(err=>console.log(err))
+    }
+
+    const localDataFetchingHandler = (flag) =>{
+        const tagString = flag ? 'localTodoData' : 'localScheduleData'
+        const localData = JSON.parse(localStorage.getItem(tagString))
+            if(localData){
+                setDataFunction(flag, localData, 'local')
+            }
+    }
+
+    // fetching data to state
+
+    useEffect(()=>{
+        const flag = todoFlag
+        if(onlineMode){
+            onlineDataFetchingHandler(flag)
+        }else{
+            localDataFetchingHandler(flag)
+        }
+    }, [refresh, onlineMode])
+
+    // set data to localStorage
 
     useEffect(()=>{
         if(!onlineMode){
-            localStorage.setItem("localTodoData", JSON.stringify(todoData))
+            const flag = todoFlag
+            const tag = flag ? 'localTodoData' : 'localScheduleData'
+            const data = flag ? todoData : scheduleData
+            localStorage.setItem(tag, JSON.stringify(data))
         }
-    }, [todoData])
+    }, [todoData, scheduleData, onlineMode])
 
     /**
      * context function
@@ -84,25 +115,33 @@ export const Container = (props) => {
      */
 
     const attributeChangeUploader = (name, value , id)=>{
-        const data = {name, value, id}
-        axios.post('/attributeChange.json', data)
-            .then(res=>{
-                console.log(res, 'update')
-            })
-            .catch(err=>console.log(err))
+        if(onlineMode){
+            const data = {name, value, id}
+            axios.post('/attributeChange.json', data)
+                .then(res=>{
+                    console.log(res, 'update')
+                })
+                .catch(err=>console.log(err))
+        } else{
+            console.log('local update')
+        }
     }
 
     const itemDeleteUploader = (id)=>{
-        const data = {id}
-        axios.post('/itemDelete.json', data)
-            .then(res=>{
-                console.log(res, 'delete')
-            })
-            .catch(err=>console.log(err))
+        if(onlineMode){
+            const data = {id}
+            axios.post('/itemDelete.json', data)
+                .then(res=>{
+                    console.log(res, 'delete')
+                })
+                .catch(err=>console.log(err))
+        }else{
+            console.log('local delete')
+        }
     }
 
-    const passingContext = {infoIdHandler, itemAddHandler, itemDeleteHandler, attributeChangeHandler,
-        attributeChangeUploader, itemDeleteUploader}
+    const passingContext = {infoIdHandler, itemAddHandler, itemDeleteHandler, pomoMode, 
+        clockMode, attributeChangeHandler, attributeChangeUploader, itemDeleteUploader}
 
     return (
         <div className='container w-full h-screen mx-auto px-10 py-5'>
@@ -115,7 +154,7 @@ export const Container = (props) => {
                 </div>
             </div>:null}
             <div className='-z-20'>
-                <Add />
+                <Add onlineMode={onlineMode}/>
                 <Holder todoData={todoData}/>
             </div>
             </Context.Provider>

@@ -2,7 +2,7 @@ import React from 'react'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 // import userIcon from '../images/user.png'
 
-const Sidebar = () => {
+const Sidebar = ({settingPageHandler, refreshHandler}) => {
     return (
         <div className='h-full box-border relative'>
             <div className='text-2xl text-center pt-5 py-2 p-2 mx-1 font-bold'>
@@ -13,9 +13,21 @@ const Sidebar = () => {
                 <p className='p-4 mx-auto justify-items-center'>Ho Yipyik</p>
             </div>
             <div className='container flex flex-col relative top-6 m-5 w-auto h-2/7'>
-                <div className='bg-gray-300 hover:bg-slate-300 hover:cursor-pointer rounded-md px-2 py-1 text-center my-3'>To do</div>
-                <div className='bg-gray-300 hover:bg-slate-300 hover:cursor-pointer rounded-md px-2 py-1 text-center my-3'>Schedule</div>
-                <div className='bg-gray-300 hover:bg-slate-300 hover:cursor-pointer rounded-md px-2 py-1 text-center my-3'>Setting</div>
+                <div 
+                    onClick={refreshHandler}
+                    className='bg-gray-300 hover:bg-slate-300 hover:cursor-pointer rounded-md px-2 py-1 text-center my-3'>
+                    To do
+                </div>
+                <div 
+                    onClick={refreshHandler}
+                    className='bg-gray-300 hover:bg-slate-300 hover:cursor-pointer rounded-md px-2 py-1 text-center my-3'>
+                    Schedule
+                </div>
+                <div 
+                    onClick={()=>settingPageHandler(true)}
+                    className='bg-gray-300 hover:bg-slate-300 hover:cursor-pointer rounded-md px-2 py-1 text-center my-3'>
+                        Setting
+                </div>
             </div>
 
             <div className='absolute bottom-1 mx-auto text-xs font-mono w-full text-center'>
