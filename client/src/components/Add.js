@@ -63,7 +63,7 @@ const Add = (props) => {
     const itemAddUploader = (item) =>{
         axios.post('/itemAdd.json', item)
             .then(res=>{
-                console.log(res)
+                console.log(res, 'add')
             })
             .catch(err=>console.log(err))
     }

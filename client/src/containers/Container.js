@@ -9,7 +9,7 @@ export const Context = createContext('DefaultValue')
 
 export const Container = (props) => {
     const [infoFlag, setInfoFlag] = useState(false)
-    const [onlineMode, setOnlineMode] = useState(false)
+    const [onlineMode, setOnlineMode] = useState(true)
     const [infoSpace, setInfoSpace] = useState({})
     const [infoId, setInfoId] = useState('')
     const [todoData, setTodoData] = useState([])
@@ -25,12 +25,14 @@ export const Container = (props) => {
                     const {data} = res
                     if(data)
                         setTodoData(data)
+                        console.log(res, 'online todoData load')
                 })
                 .catch(err=>console.log(err))
         }else{
             const localTodoData = JSON.parse(localStorage.getItem('localTodoData'))
             if(localTodoData){
                 setTodoData(localTodoData)
+                console.log(localTodoData, 'localData load')
             }
         }
     }, [])
@@ -85,7 +87,7 @@ export const Container = (props) => {
         const data = {name, value, id}
         axios.post('/attributeChange.json', data)
             .then(res=>{
-                // console.log(res)
+                console.log(res, 'update')
             })
             .catch(err=>console.log(err))
     }
@@ -94,7 +96,7 @@ export const Container = (props) => {
         const data = {id}
         axios.post('/itemDelete.json', data)
             .then(res=>{
-                // console.log(res)
+                console.log(res, 'delete')
             })
             .catch(err=>console.log(err))
     }
