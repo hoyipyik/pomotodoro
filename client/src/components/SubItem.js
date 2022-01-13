@@ -38,4 +38,4 @@ const SubItem = ({id, subTaskName, checked,
     )
 }
 
-export default SubItem
+export default React.memo(SubItem)

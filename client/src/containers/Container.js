@@ -1,18 +1,21 @@
-import React, {useState, createContext, useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import SubInfo from '../components/SubInfo'
 import Add from '../components/Add'
 import Holder from './Holder'
 import Backdrop from '../tools/Backdrop'
 import axios from '../axios'
+import { Context } from '../tools/Context'
+// import { ContextApp } from '../tools/Context'
 
-export const Context = createContext('DefaultValue')
-
-export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) => {
+const Container = ({pomoMode, clockMode, onlineMode,
+        todoFlag, refresh, modeChangeHandler}) => {
     const [infoFlag, setInfoFlag] = useState(false)
     const [infoSpace, setInfoSpace] = useState({})
     const [infoId, setInfoId] = useState('')
     const [todoData, setTodoData] = useState([])
     const [scheduleData, setScheduleData] = useState([])
+
+    // flag handler
 
     const infoPageHandler = (value) =>{
         setInfoFlag(value)
@@ -34,14 +37,20 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
 
     const onlineDataFetchingHandler = (flag) =>{
         let api = flag ? '/todoData.json' : '/scheduleData.json'
+        // console.log('online works')
         axios.get(api)
             .then(res=>{
                 const {data} = res
                 const onlineData = data
+                // console.log(onlineMode)
                 if(onlineData)
                     setDataFunction(flag, onlineData, 'online')
             })
-            .catch(err=>console.log(err))
+            .catch(err=>{
+                console.log(err)
+                window.alert('You are offline now, turn to local ')
+                modeChangeHandler(false, "onlineMode")
+            })
     }
 
     const localDataFetchingHandler = (flag) =>{
@@ -56,6 +65,7 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
 
     useEffect(()=>{
         const flag = todoFlag
+        // console.log('countainer fetching data')
         if(onlineMode){
             onlineDataFetchingHandler(flag)
         }else{
@@ -113,6 +123,18 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
     }
 
     /**
+     * sundden offline handler
+     */
+
+    const suddenOfflineHandler = (type) =>{
+        const onlineTodo = todoData
+        const tag = type === 'todo' ? 'localTodoData' : 'localScheduleData'
+        const localTodo = JSON.parse(localStorage.getItem(tag))
+        const newData = [...localTodo, ...onlineTodo]
+        localStorage.setItem(tag, JSON.stringify(newData))
+    }
+
+    /**
      * Uploader function Context
      */
 
@@ -123,7 +145,12 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
                 .then(res=>{
                     console.log('update')
                 })
-                .catch(err=>console.log(err))
+                .catch(err=>{
+                    console.log(err)
+                    window.alert('You are offline now, turn to local ')
+                    modeChangeHandler(false, "onlineMode")
+                    suddenOfflineHandler('todo')
+                })
         } else{
             console.log('local update')
         }
@@ -136,15 +163,21 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
                 .then(res=>{
                     console.log('delete')
                 })
-                .catch(err=>console.log(err))
+                .catch(err=>{
+                    console.log(err)
+                    window.alert('You are offline now, turn to local ')
+                    modeChangeHandler(false, "onlineMode")
+                    suddenOfflineHandler('todo')
+                })
         }else{
             console.log('local delete')
         }
     }
 
-    const passingContext = {infoIdHandler, itemAddHandler, itemDeleteHandler, pomoMode, 
+    const passingContext = {infoIdHandler, itemAddHandler, itemDeleteHandler, pomoMode, modeChangeHandler,
         clockMode, attributeChangeHandler, attributeChangeUploader, itemDeleteUploader}
-
+    
+    // console.log(onlineMode, 'render container')
     return (
         <div className='container w-full h-screen mx-auto px-10 py-5'>
             <Context.Provider value={passingContext}>
@@ -156,7 +189,7 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
                 </div>
             </div>:null}
             <div className='-z-20'>
-                <Add onlineMode={onlineMode}/>
+                <Add onlineMode={onlineMode} suddenOfflineHandler={suddenOfflineHandler}/>
                 <Holder todoData={todoData}/>
             </div>
             </Context.Provider>
@@ -164,4 +197,4 @@ export const Container = ({pomoMode, clockMode, onlineMode, todoFlag, refresh}) 
     )
 }
 
-
+export default Container

@@ -5,7 +5,7 @@ import SubItem from './SubItem'
 import Checkbox from '../tools/Checkbox'
 import Switch from '../tools/Switch'
 import Slider from '../tools/Slider'
-import { Context } from '../containers/Container'
+import { Context } from '../tools/Context'
 
 const SubInfo = ({infoSpace, infoPageHandler}) => {
     const {id, taskName, checked, priority, pomoTimes, subTasks} = infoSpace

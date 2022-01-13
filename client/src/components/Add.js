@@ -1,11 +1,11 @@
 import React, {useState, useContext, useEffect, createRef} from 'react'
-import { Context } from '../containers/Container'
+import { Context } from '../tools/Context'
 import axios from '../axios'
 
-const Add = ({onlineMode}) => {
+const Add = ({onlineMode, suddenOfflineHandler}) => {
     const [taskName, setTaskName] = useState('')
 
-    const {itemAddHandler} = useContext(Context)
+    const {itemAddHandler, modeChangeHandler} = useContext(Context)
     const ref = createRef()
 
     useEffect(()=>{
@@ -66,7 +66,12 @@ const Add = ({onlineMode}) => {
             .then(res=>{
                 console.log('add')
             })
-            .catch(err=>console.log(err))
+            .catch(err=>{
+                console.log(err)
+                window.alert('You are offline now, turn to local ')
+                modeChangeHandler(false, "onlineMode")
+                suddenOfflineHandler('todo')
+            })
         }else{
             console.log('local add')
         }

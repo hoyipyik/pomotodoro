@@ -3,7 +3,7 @@ import AcUnitIcon from '@material-ui/icons/AcUnit'
 import DeleteIcon from '@material-ui/icons/Delete'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Checkbox from '../tools/Checkbox'
-import { Context } from '../containers/Container'
+import { Context } from '../tools/Context'
   
 const Item = ({id, taskName, checked, priority, pomoTimes}) => {
     const blue = {fill:'#155fd8'}
@@ -49,7 +49,7 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
             </div>
             <div 
                 onClick={()=>attributeChangeFunction('priority', !priority)}
-                className=' pt-px col-start-3 col-span-9 sm:col-start-2 sm:col-span-10 xl:col-span-8 lg:col-span-7 lg:max-w-7xl lg:-ml-4 xl:-ml-7' 
+                className=' pt-px col-start-3 col-span-8 sm:col-start-2 sm:col-span-10 xl:col-span-8 lg:col-span-7 lg:max-w-7xl lg:-ml-4 xl:-ml-7' 
                 style={{textDecoration: checked ? "line-through" : null,
                 fontWeight: priority ? "bold" : null}}>
                    {taskName} 
@@ -58,7 +58,7 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
             <div className='lg:col-start-9 lg:col-span-3 xl:col-start-10 xl:col-span-2 mx-auto lg:block relative lg:left-7 hidden'>
                 {pomoIcon}
             </div> : null }
-            <div className='col-start-12 mx-auto'>
+            <div className='col-start-11 sm:col-start-12 mx-auto'>
                 <DeleteIcon 
                     onClick={deleteFunction}
                     className='hover:cursor-pointer h-full relative lg:left-4'
@@ -71,4 +71,4 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
     )
 }
 
-export default Item
+export default React.memo(Item)

@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react'
 
 import Sidebar from './components/Sidebar'
-import {Container} from './containers/Container'
+import Container from './containers/Container'
 import Setting from './components/Setting'
 import Backdrop from './tools/Backdrop'
+// import { ContextApp } from './tools/Context'
 
 const App = () =>{
   const [todoFlag, setTodoFlag] = useState(true)
@@ -21,7 +22,7 @@ const App = () =>{
     const modeFlag  = JSON.parse(localStorage.getItem('modeFlag'))
     if(modeFlag){
       const {online, pomo, clock} = modeFlag
-      setOnlineMode(online)
+      // setOnlineMode(online)
       setPomoMode(pomo)
       setClockMode(clock)
     }
@@ -29,13 +30,13 @@ const App = () =>{
   }, [])
 
   useEffect(()=>{
-    const online = onlineMode
+    // const online = onlineMode
     const pomo = pomoMode
     const clock = clockMode
-    const modeFlag = { online, pomo, clock}
+    const modeFlag = {pomo, clock}
     localStorage.setItem('modeFlag', JSON.stringify(modeFlag))
     return
-  }, [onlineMode, pomoMode, clockMode])
+  }, [pomoMode, clockMode])
   
   //
 
@@ -66,10 +67,12 @@ const App = () =>{
     }
   }
 
+  // console.log(onlineMode, 'render app')
+
   return (
     <div>
       { settingPageFlag ?
-      <div>
+      <div className='flex'>
         <Setting 
           modeChangeHandler={modeChangeHandler}
           pomoMode={pomoMode} clockMode={clockMode}
@@ -85,12 +88,12 @@ const App = () =>{
         </div>
         <div className='lg:basis-4/5 basis-full overflow-auto h-screen'>
           <Container
-            pomoMode={pomoMode} clockMode={clockMode}
-            onlineMode={onlineMode} todoFlag={todoFlag} refresh={refresh}/>
+            pomoMode={pomoMode} clockMode={clockMode} modeChangeHandler={modeChangeHandler}
+            todoFlag={todoFlag} refresh={refresh} onlineMode={onlineMode}/>
         </div>
       </div> 
     </div>
   )
 }
 
-export default App;
+export default App

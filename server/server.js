@@ -96,7 +96,7 @@ app.post('/attributeChange.json', (req, res)=>{
         })
     })
     
-})
+}) 
 
 app.post('/merge.json', (req, res)=>{
     const rawData = req.body
