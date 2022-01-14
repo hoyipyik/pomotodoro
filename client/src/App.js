@@ -4,7 +4,7 @@ import Sidebar from './components/Sidebar'
 import Container from './containers/Container'
 import Setting from './components/Setting'
 import Backdrop from './tools/Backdrop'
-// import { ContextApp } from './tools/Context'
+import { ContextApp } from './tools/Context'
 
 const App = () =>{
   const [todoFlag, setTodoFlag] = useState(true)
@@ -13,6 +13,7 @@ const App = () =>{
   const [clockMode, setClockMode] = useState(false)
   const [settingPageFlag, setSettingPageFlag] = useState(false)
   const [refresh, setRefresh] = useState(false) 
+  const [minSidebarFlag, setMinSidebarFlag] = useState(false)
 
   /**
    * mode flag set and load to/from localStorage
@@ -38,7 +39,7 @@ const App = () =>{
     return
   }, [pomoMode, clockMode])
   
-  //
+  // flag control
 
   const settingPageHandler = (value) =>{
     setSettingPageFlag(value)
@@ -46,6 +47,10 @@ const App = () =>{
 
   const refreshHandler = () =>{
     setRefresh(!refresh)
+  }
+
+  const minSidebarHandler = (value) =>{
+    setMinSidebarFlag(value)
   }
 
   /**
@@ -67,10 +72,12 @@ const App = () =>{
     }
   }
 
+  const contextPassingValue = {minSidebarHandler}
   // console.log(onlineMode, 'render app')
 
   return (
     <div>
+      <ContextApp.Provider value={contextPassingValue}>
       { settingPageFlag ?
       <div className='flex'>
         <Setting 
@@ -80,6 +87,16 @@ const App = () =>{
         />
         <div onClick={()=>settingPageHandler(false)}><Backdrop /></div>
       </div> : null }
+      { minSidebarFlag ?
+        <div className='select-none absolute block lg:hidden w-2/3 sm:w-2/5 md:w-1/3 h-screen overflow-hidden'>
+            <div onClick={()=>minSidebarHandler(false)}><Backdrop z={20}/></div>
+            <div className='z-50 h-screen'>
+              <Sidebar 
+              settingPageHandler={settingPageHandler} 
+              refreshHandler={refreshHandler}/> 
+            </div>
+        </div> : null
+      }
       <div className='flex flex-row min-h-fit'>
         <div className='select-none bg-gray-100 lg:block hidden md:basis-1/5 h-screen overflow-auto'>
           <Sidebar 
@@ -92,6 +109,7 @@ const App = () =>{
             todoFlag={todoFlag} refresh={refresh} onlineMode={onlineMode}/>
         </div>
       </div> 
+      </ContextApp.Provider>
     </div>
   )
 }

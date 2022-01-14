@@ -1,11 +1,14 @@
 import React, {useState, useContext, useEffect, createRef} from 'react'
+import MenuIcon from '@material-ui/icons/Menu'
 import { Context } from '../tools/Context'
+import { ContextApp } from '../tools/Context'
 import axios from '../axios'
 
 const Add = ({onlineMode, suddenOfflineHandler}) => {
     const [taskName, setTaskName] = useState('')
 
     const {itemAddHandler, modeChangeHandler} = useContext(Context)
+    const {minSidebarHandler} = useContext(ContextApp)
     const ref = createRef()
 
     useEffect(()=>{
@@ -80,7 +83,12 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
     return (
         <div className='select-none'>
             <header>
-                <h1 className='text-2xl font-bold font-sans'>What's Your Plan Today</h1>
+                <div className='flex'>
+                    <div 
+                        onClick={minSidebarHandler} 
+                        className='lg:hidden h-full my-auto mr-2  hover:cursor-pointer'><MenuIcon /></div>
+                    <h1 className='inline text-2xl font-bold font-sans'>What's Your Plan Today</h1>
+                </div>
                 <input
                     id='addInput'
                     ref={ref} 
