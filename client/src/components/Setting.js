@@ -128,23 +128,27 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
 
     const mergeButtonFunction = () =>{
         if(onlineMode){
-            const dulplicatedRmovedtodoData = [...onlineTodoData, ...localTodoData].reduce((prev, cur)=>{
-                if(prev.indexOf(cur) === -1){
-                    prev.push(cur)
+            let dulplicatedRemovedtodoData = []
+            const dulplicatedRmovedtodoDataId = [...onlineTodoData, ...localTodoData].reduce((prev, cur)=>{
+                if(prev.indexOf(cur.id) === -1){
+                    prev.push(cur.id)
+                    dulplicatedRemovedtodoData.push(cur)
                 }
                 return prev
             }, [])
-            const dulplicatedRemovedscheduleData = [...onlineScheduleData, ...localScheduleData].reduce((prev, cur)=>{
-                if(prev.indexOf(cur) === -1){
-                    prev.push(cur)
+            let dulplicatedRemovedscheduleData = []
+            const dulplicatedRemovedscheduleDataId = [...onlineScheduleData, ...localScheduleData].reduce((prev, cur)=>{
+                if(prev.indexOf(cur.id) === -1){
+                    prev.push(cur.id)
+                    dulplicatedRemovedscheduleData.push(cur)
                 }
                 return prev
             }, [])
 
             if(o2l_merge==='o2l'){
-                localPushHandler(dulplicatedRmovedtodoData, dulplicatedRemovedscheduleData, 'merge')    
+                localPushHandler(dulplicatedRemovedtodoData, dulplicatedRemovedscheduleData, 'merge')    
             }else if(l2o_merge==='l2o'){
-                onlinePushHandler(dulplicatedRmovedtodoData, dulplicatedRemovedscheduleData, 'merge')
+                onlinePushHandler(dulplicatedRemovedtodoData, dulplicatedRemovedscheduleData, 'merge')
             }
         }
     }

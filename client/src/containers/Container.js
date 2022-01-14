@@ -58,6 +58,8 @@ const Container = ({pomoMode, clockMode, onlineMode,
         const localData = JSON.parse(localStorage.getItem(tagString))
             if(localData){
                 setDataFunction(flag, localData, 'local')
+            }else{
+                setDataFunction(flag, [], 'local')
             }
     }
 
