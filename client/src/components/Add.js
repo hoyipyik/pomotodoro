@@ -87,7 +87,7 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
                     <div 
                         onClick={minSidebarHandler} 
                         className='lg:hidden h-full my-auto mr-2  hover:cursor-pointer'><MenuIcon /></div>
-                    <h1 className='inline text-2xl font-bold font-sans'>What's Your Plan Today</h1>
+                    <h1 className='inline md:text-2xl text-xl font-bold font-sans'>What's Your Plan Today</h1>
                 </div>
                 <input
                     id='addInput'
