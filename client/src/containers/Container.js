@@ -184,7 +184,7 @@ const Container = ({pomoMode, clockMode, onlineMode,
             <div>
                 <SubInfo infoSpace={infoSpace} infoPageHandler={infoPageHandler}/>
                 <div onClick={()=>infoPageHandler(false)}>
-                    <Backdrop/>
+                    <Backdrop />
                 </div>
             </div>:null}
             <div className='-z-20'>

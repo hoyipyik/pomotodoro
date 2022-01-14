@@ -90,7 +90,7 @@ const App = () =>{
       { minSidebarFlag ?
         <div className='select-none absolute block lg:hidden w-2/3 sm:w-2/5 md:w-1/3 h-screen overflow-hidden'>
             <div onClick={()=>minSidebarHandler(false)}><Backdrop z={20}/></div>
-            <div className='z-50 h-screen'>
+            <div className='h-screen'>
               <Sidebar 
               settingPageHandler={settingPageHandler} 
               refreshHandler={refreshHandler}/> 
