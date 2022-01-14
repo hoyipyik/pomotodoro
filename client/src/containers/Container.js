@@ -28,21 +28,20 @@ const Container = ({pomoMode, clockMode, onlineMode,
     const setDataFunction = (flag, data, type) =>{
         if(flag){
             setTodoData(data)
-            console.log(`${type} todoData load`)
+            console.log(`${type} todoData load`, data)
         }else {
             setScheduleData(data)
-            console.log(`${type} scheduleData load`)
+            console.log(`${type} scheduleData load`, data)
         }
     }
 
     const onlineDataFetchingHandler = (flag) =>{
         let api = flag ? '/todoData.json' : '/scheduleData.json'
-        // console.log('online works')
+        console.log('fetching online')
         axios.get(api)
             .then(res=>{
                 const {data} = res
                 const onlineData = data
-                // console.log(onlineMode)
                 if(onlineData)
                     setDataFunction(flag, onlineData, 'online')
             })
@@ -54,6 +53,7 @@ const Container = ({pomoMode, clockMode, onlineMode,
     }
 
     const localDataFetchingHandler = (flag) =>{
+        console.log('fetching local')
         const tagString = flag ? 'localTodoData' : 'localScheduleData'
         const localData = JSON.parse(localStorage.getItem(tagString))
             if(localData){
@@ -65,7 +65,6 @@ const Container = ({pomoMode, clockMode, onlineMode,
 
     useEffect(()=>{
         const flag = todoFlag
-        // console.log('countainer fetching data')
         if(onlineMode){
             onlineDataFetchingHandler(flag)
         }else{
@@ -197,4 +196,4 @@ const Container = ({pomoMode, clockMode, onlineMode,
     )
 }
 
-export default Container
+export default React.memo(Container)

@@ -17,4 +17,4 @@ const Holder = ({todoData}) => {
     )
 }
 
-export default Holder
+export default React.memo(Holder)

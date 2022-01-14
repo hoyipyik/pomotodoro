@@ -98,36 +98,16 @@ app.post('/attributeChange.json', (req, res)=>{
     
 }) 
 
-app.post('/merge.json', (req, res)=>{
+app.post('/merge_schedule.json', (req, res)=>{
     const rawData = req.body
-    const {todo, schedule} = rawData
-    const MongoClient = require('mongodb').MongoClient
-    MongoClient.connect(url, (err, db)=>{
-        if(err) throw err
-        let dbo = db.db('Ho_Yipyik')
-        dbo.collection('todoData').drop((err1, res1)=>{
-            if(err1) throw err1
-            console.log(res1, 'drop todo')
-            dbo.createCollection('todoData', (err3, res3)=>{
-                if(err3) throw err3
-                console.log('create collection todoData')
-                if(todo[0]!==undefined){
-                    dbo.collection('todoData').insertMany(todo, (err5, res5)=>{
-                        if(err5) throw err5
-                        console.log('todoData renew')
-                        db.close()
-                    })
-                }
-            })
-        })
-    })
+    const schedule = rawData
     const MongoClient2 = require('mongodb').MongoClient
     MongoClient2.connect(url, (err, db)=>{
         if(err) throw err
         let dbo2 = db.db("Ho_Yipyik")
         dbo2.collection('scheduleData').drop((err2, res2)=>{
             if(err2) throw err2
-            console.log(res2, 'drop schedule')
+            console.log('drop schedule')
             dbo2.createCollection('scheduleData', (err4, res4)=>{
                 if(err4) throw err4
                 console.log('create collection scheduleData')
@@ -136,13 +116,52 @@ app.post('/merge.json', (req, res)=>{
                         if(err6) throw err6
                         console.log('scheduleData renew')
                         db.close()
+                        res.send({msg:'schedule renew'})
                     })
+                }else{
+                    console.log('scheduleData renew')
+                    db.close()
+                    res.send({msg:'schedule renew'})
                 }
             })
         })
         
     })
-    res.send({msg:'renew merge'})
+    // res.send({msg: 'schedule renew'})
+})
+
+app.post('/merge_todo.json', (req, res)=>{
+    const rawData = req.body
+    const todo = rawData
+    // console.log(rawData)
+    const MongoClient = require('mongodb').MongoClient
+    MongoClient.connect(url, (err, db)=>{
+        if(err) throw err
+        let dbo = db.db('Ho_Yipyik')
+        dbo.collection('todoData').drop((err1, res1)=>{
+            if(err1) throw err1
+            console.log('drop todo')
+            dbo.createCollection('todoData', (err3, res3)=>{
+                if(err3) throw err3
+                console.log('create collection todoData')
+                
+                if(todo[0]!==undefined){
+                    dbo.collection('todoData').insertMany(todo, (err5, res5)=>{
+                        if(err5) throw err5
+                        console.log('todoData renew')
+                        db.close()
+                        res.send({msg:'todo renew'})
+                    })
+                }else{
+                    console.log('todoData renew')
+                    db.close()
+                    res.send({msg:'todo renew'})
+                }
+            })
+        })
+    })
+    // res.send({msg:'todo renew'})
+    
 })
 
 

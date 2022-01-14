@@ -15,6 +15,16 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
     const [localTodoData, setLocalTodoData] = useState([])
     const [localScheduleData, setLocalScheduleData] = useState([])
 
+    useEffect(()=>{
+        if(!onlineMode){
+            setL2o_merge('')
+            setL2o_override('')
+            setO2l_merge('')
+            setO2l_override('')
+        }
+        return
+    }, [onlineMode])
+
     /**
      * fetching data function
      */
@@ -85,13 +95,14 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
      */
 
     const onlinePushHandler = (todo, schedule, type) =>{
-        const pack = {todo, schedule}
-        // const addr = type === 'override' ? '/override.json' : '/merge.json'
-        const addr = '/merge.json'
-        axios.post(addr, pack)
+        axios.post('/merge_todo.json', todo)
             .then(res=>{
-                console.log(`[${type}] local to online success`)
-                refreshHandler()
+                axios.post('/merge_schedule.json', schedule)
+                    .then(res=>{
+                        console.log(`[${type}] local to online success`)
+                        refreshHandler()
+                    })
+                    .catch(err=>console.log(err))
             })
             .catch(err=>console.log(err))
     }
@@ -108,7 +119,6 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
     const overrideButtonFunction = () =>{
         if(onlineMode){
             if(o2l_override==='o2l'){
-                // console.log('clicked')
                 localPushHandler(onlineTodoData, onlineScheduleData, 'override')    
             }else if(l2o_override==='l2o'){
                 onlinePushHandler(localTodoData, localScheduleData, 'override')
@@ -118,12 +128,23 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
 
     const mergeButtonFunction = () =>{
         if(onlineMode){
-            // console.log('clicked')
+            const dulplicatedRmovedtodoData = [...onlineTodoData, ...localTodoData].reduce((prev, cur)=>{
+                if(prev.indexOf(cur) === -1){
+                    prev.push(cur)
+                }
+                return prev
+            }, [])
+            const dulplicatedRemovedscheduleData = [...onlineScheduleData, ...localScheduleData].reduce((prev, cur)=>{
+                if(prev.indexOf(cur) === -1){
+                    prev.push(cur)
+                }
+                return prev
+            }, [])
+
             if(o2l_merge==='o2l'){
-                // console.log('clicked')
-                localPushHandler([...onlineTodoData, ...localTodoData], [...onlineScheduleData, ...localScheduleData], 'merge')    
+                localPushHandler(dulplicatedRmovedtodoData, dulplicatedRemovedscheduleData, 'merge')    
             }else if(l2o_merge==='l2o'){
-                onlinePushHandler([...localTodoData, ...onlineTodoData], [...localScheduleData, ...onlineScheduleData], 'merge')
+                onlinePushHandler(dulplicatedRmovedtodoData, dulplicatedRemovedscheduleData, 'merge')
             }
         }
     }
