@@ -8,9 +8,9 @@ import { ContextApp } from './tools/Context'
 
 const App = () =>{
   const [todoFlag, setTodoFlag] = useState(true)
-  const [onlineMode, setOnlineMode] = useState(true)
-  const [pomoMode, setPomoMode] = useState(true)
-  const [clockMode, setClockMode] = useState(false)
+  const [onlineMode, setOnlineMode] = useState()
+  const [pomoMode, setPomoMode] = useState()
+  const [clockMode, setClockMode] = useState()
   const [settingPageFlag, setSettingPageFlag] = useState(false)
   const [refresh, setRefresh] = useState(false) 
   const [minSidebarFlag, setMinSidebarFlag] = useState(false)
@@ -23,21 +23,25 @@ const App = () =>{
     const modeFlag  = JSON.parse(localStorage.getItem('modeFlag'))
     if(modeFlag){
       const {online, pomo, clock} = modeFlag
-      // setOnlineMode(online)
+      setOnlineMode(online)
       setPomoMode(pomo)
       setClockMode(clock)
+    }else{
+      setOnlineMode(true)
+      setPomoMode(true)
+      setClockMode(false)
     }
     return 
   }, [])
 
   useEffect(()=>{
-    // const online = onlineMode
+    const online = onlineMode
     const pomo = pomoMode
     const clock = clockMode
-    const modeFlag = {pomo, clock}
+    const modeFlag = {online, pomo, clock}
     localStorage.setItem('modeFlag', JSON.stringify(modeFlag))
     return
-  }, [pomoMode, clockMode])
+  }, [onlineMode, pomoMode, clockMode])
   
   // flag control
 
