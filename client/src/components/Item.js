@@ -4,14 +4,17 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Checkbox from '../tools/Checkbox'
 import { Context } from '../tools/Context'
+// import { ContextApp } from '../tools/Context'
   
-const Item = ({id, taskName, checked, priority, pomoTimes}) => {
+const Item = ({id, taskName, checked, priority, pomoTimes, todo, push}) => {
     const blue = {fill:'#155fd8'}
     const gray = {fill:'#7b8088'}
     const seed = [1,1,1,1,1]
 
     const {infoIdHandler, itemDeleteHandler, attributeChangeHandler, pomoMode, 
         attributeChangeUploader, itemDeleteUploader} = useContext(Context)
+
+    // const {todoFlag} = useContext(ContextApp)
 
     const pomoIcon = seed.map((e, index)=>{
         const element = <AcUnitIcon key={id+index} style={gray} className='hover:cursor-pointer'
@@ -26,17 +29,20 @@ const Item = ({id, taskName, checked, priority, pomoTimes}) => {
     })
 
     const attributeChangeFunction = (name, value) =>{
-        attributeChangeHandler(name, value, id)
-        attributeChangeUploader(name, value, id)
+        const type = todo
+        attributeChangeHandler(name, value, id, type)
+        attributeChangeUploader(name, value, id, type)
     }
 
     const deleteFunction = () =>{
-        itemDeleteHandler(id)
-        itemDeleteUploader(id)
+        const type = todo
+        itemDeleteHandler(id, type)
+        itemDeleteUploader(id, type)
     }
 
     const infoDirectFunction = () =>{
-        infoIdHandler(id)
+        const type = todo
+        infoIdHandler(id, type)
     }
 
     return (

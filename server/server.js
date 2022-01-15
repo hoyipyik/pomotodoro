@@ -45,11 +45,14 @@ app.get('/scheduleData.json', (req, res)=>{
 
 app.post('/itemDelete.json', (req, res)=>{
     const rawData = req.body
+    const {id, type} = rawData
+    const collectionName = type ? 'todoData' : 'scheduleData'
+    const queryFactor = {id: id}
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db)=>{
         if(err) throw err
         let dbo = db.db('Ho_Yipyik')
-        dbo.collection('todoData').deleteOne(rawData, (err1, res1)=>{
+        dbo.collection(collectionName).deleteOne(queryFactor, (err1, res1)=>{
             if(err1) throw err1
             console.log("delete success")
             res.send({res1, msg:'delete'})
@@ -60,11 +63,13 @@ app.post('/itemDelete.json', (req, res)=>{
 
 app.post('/itemAdd.json', (req, res)=>{
     const rawData = req.body
+    const {item, type} = rawData
+    const collectionName = type ? 'todoData' : 'scheduleData'
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db)=>{
         if(err) throw err
         let dbo = db.db('Ho_Yipyik')
-        dbo.collection('todoData').insertOne(rawData, (err1, res1)=>{
+        dbo.collection(collectionName).insertOne(item, (err1, res1)=>{
             if(err1) throw err1
             console.log('insert successfully')
             res.send({res1, msg: 'add'})
@@ -75,19 +80,20 @@ app.post('/itemAdd.json', (req, res)=>{
 
 app.post('/attributeChange.json', (req, res)=>{
     const rawData = req.body
-    const {id, name, value} = rawData
+    const {id, name, value, type} = rawData
+    const collectionName = type ? 'todoData' : 'scheduleData'
     const queryFactor = {id: id}
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db)=>{
         if(err) throw err
         let dbo = db.db('Ho_Yipyik')
-        dbo.collection('todoData').find(queryFactor).toArray((err1, res1)=>{
+        dbo.collection(collectionName).find(queryFactor).toArray((err1, res1)=>{
             if(err1) throw err1
             let oldItem = res1[0]
             oldItem[name] = value
             const newItem = oldItem
             const setData = {$set: newItem}
-            dbo.collection('todoData').updateOne(queryFactor, setData, (err2, res2)=>{
+            dbo.collection(collectionName).updateOne(queryFactor, setData, (err2, res2)=>{
                 if (err2) throw err2
                 console.log('update success')
                 res.send({res2, msg: 'update'})

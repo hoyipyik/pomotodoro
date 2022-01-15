@@ -8,7 +8,7 @@ import Slider from '../tools/Slider'
 import { Context } from '../tools/Context'
 
 const SubInfo = ({infoSpace, infoPageHandler}) => {
-    const {id, taskName, checked, priority, pomoTimes, subTasks} = infoSpace
+    const {id, taskName, checked, priority, pomoTimes, subTasks, todo, push} = infoSpace
     const {itemDeleteHandler, attributeChangeHandler, pomoMode, clockMode,
         itemDeleteUploader, attributeChangeUploader} = useContext(Context)
 
@@ -62,8 +62,9 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
     }
 
     const deleteFunction = () =>{
-        itemDeleteHandler(id)
-        itemDeleteUploader(id)
+        const type = todo
+        itemDeleteHandler(id, type)
+        itemDeleteUploader(id, type)
         infoPageHandler(false)
     }
 
@@ -77,8 +78,9 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
     }
 
     const attributeChangeFunction = (name, value) =>{
-        attributeChangeHandler(name, value, id)
-        attributeChangeUploader(name, value, id)
+        const type = todo
+        attributeChangeHandler(name, value, id, type)
+        attributeChangeUploader(name, value, id, type)
     }
 
     /**

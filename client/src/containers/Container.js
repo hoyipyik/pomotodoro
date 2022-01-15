@@ -56,6 +56,7 @@ const Container = ({pomoMode, clockMode, onlineMode,
         console.log('fetching local')
         const tagString = flag ? 'localTodoData' : 'localScheduleData'
         const localData = JSON.parse(localStorage.getItem(tagString))
+        // console.log('localdata .......', localData)
             if(localData){
                 setDataFunction(flag, localData, 'local')
             }else{
@@ -67,7 +68,7 @@ const Container = ({pomoMode, clockMode, onlineMode,
 
     useEffect(()=>{
         const flag = todoFlag
-        if(onlineMode){
+        if(onlineMode||onlineMode===undefined){
             onlineDataFetchingHandler(flag)
         }else{
             localDataFetchingHandler(flag)
@@ -82,7 +83,10 @@ const Container = ({pomoMode, clockMode, onlineMode,
             const flag = todoFlag
             const tag = flag ? 'localTodoData' : 'localScheduleData'
             const data = flag ? todoData : scheduleData
-            localStorage.setItem(tag, JSON.stringify(data))
+            if(data[0]!==undefined){
+                console.log('set to localStorage', data)
+                localStorage.setItem(tag, JSON.stringify(data))
+            }
         }
         return
     }, [todoData, scheduleData, onlineMode])
@@ -91,36 +95,46 @@ const Container = ({pomoMode, clockMode, onlineMode,
      * context function
      */
 
-    const infoIdHandler = (id) =>{
+    const infoIdHandler = (id, type) =>{
         setInfoId(id)
-        todoData.forEach(e=>{
+        const data = type ? todoData : scheduleData
+        data.forEach(e=>{
             if(e.id===id)
             setInfoSpace(e)
         })
         infoPageHandler(true)
     }
 
-    const itemDeleteHandler = (id) =>{
-        const oldData = todoData
+    const itemDeleteHandler = (id, type) =>{
+        const oldData = type ? todoData : scheduleData
         const newData = oldData.filter((e)=>e.id!==id)
-        setTodoData(newData)
+        if(type)
+            setTodoData(newData)
+        else
+            setScheduleData(newData)
     }
 
-    const itemAddHandler = (item) =>{
-        const oldData = todoData
+    const itemAddHandler = (item, type) =>{
+        const oldData = type ? todoData : scheduleData
         const newData = [...oldData, item]
-        setTodoData(newData)
+        if(type)
+            setTodoData(newData)
+        else
+            setScheduleData(newData)
     }
 
-    const attributeChangeHandler = (name, value, id) =>{
-        const oldData = todoData
+    const attributeChangeHandler = (name, value, id, type) =>{
+        const oldData = type ? todoData : scheduleData
         const newData = oldData.map((e, index)=>{
             if(e.id === id){
                 e[name] = value
             }
             return e
         })
-        setTodoData(newData)
+        if(type)
+            setTodoData(newData)
+        else
+            setScheduleData(newData)
     }
 
     /**
@@ -139,9 +153,9 @@ const Container = ({pomoMode, clockMode, onlineMode,
      * Uploader function Context
      */
 
-    const attributeChangeUploader = (name, value , id)=>{
+    const attributeChangeUploader = (name, value , id, type)=>{
         if(onlineMode){
-            const data = {name, value, id}
+            const data = {name, value, id, type}
             axios.post('/attributeChange.json', data)
                 .then(res=>{
                     console.log('update')
@@ -157,9 +171,9 @@ const Container = ({pomoMode, clockMode, onlineMode,
         }
     }
 
-    const itemDeleteUploader = (id)=>{
+    const itemDeleteUploader = (id, type)=>{
         if(onlineMode){
-            const data = {id}
+            const data = {id, type}
             axios.post('/itemDelete.json', data)
                 .then(res=>{
                     console.log('delete')
@@ -191,7 +205,8 @@ const Container = ({pomoMode, clockMode, onlineMode,
             </div>:null}
             <div className='-z-20'>
                 <Add onlineMode={onlineMode} suddenOfflineHandler={suddenOfflineHandler}/>
-                <Holder todoData={todoData}/>
+                { todoFlag ? <Holder data={todoData}/>
+                : <Holder data={scheduleData}/> }
             </div>
             </Context.Provider>
         </div>

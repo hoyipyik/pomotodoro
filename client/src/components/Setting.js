@@ -161,15 +161,15 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
         <div className='pt-2 flex gap-1 flex-wrap'>
             <div className='my-1.5 mr-2'>
                 <span className='my-auto'>Online</span>
-                <Switch  onClick={()=>modeChangeHandler(!onlineMode, 'onlineMode')} checked={onlineMode}/>
+                <Switch color='primary' onClick={()=>modeChangeHandler(!onlineMode, 'onlineMode')} checked={onlineMode}/>
             </div>
             <div className=' my-1.5 mr-2'>
                 <span className='my-auto'>PomoMode</span>
-                <Switch onClick={()=>modeChangeHandler(!pomoMode, 'pomoMode')} checked={pomoMode}/>
+                <Switch color='primary' onClick={()=>modeChangeHandler(!pomoMode, 'pomoMode')} checked={pomoMode}/>
             </div>
             <div className=' my-1.5 mr-2'>
                 <span className='my-auto'>clockMode</span>
-                <Switch onClick={()=>modeChangeHandler(!clockMode, 'clockMode')} checked={clockMode && (pomoMode===true)} disabled={pomoMode===false}/>
+                <Switch color='primary' onClick={()=>modeChangeHandler(!clockMode, 'clockMode')} checked={clockMode && (pomoMode===true)} disabled={pomoMode===false}/>
             </div>
         </div>
     </div>
@@ -181,6 +181,7 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
                 <div className='mr-3 flex-shrink-0'>
                     <span className='my-auto'>Online to Local</span>
                     <Radio
+                        color='primary'
                         disabled={!onlineMode} 
                         checked={o2l_override==='o2l'}
                         value='o2l'
@@ -190,6 +191,7 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
                 <div className='mr-3 flex-shrink-0'>
                     <span className='my-auto'>Local to Online</span>
                     <Radio
+                        color='primary'
                         disabled={!onlineMode}
                         checked={l2o_override==='l2o'}
                         value='l2o'
@@ -211,6 +213,7 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
                 <div className='mr-3 flex-shrink-0'>
                     <span className='my-auto'>Online to Local</span>
                     <Radio 
+                        color='primary'
                         disabled={!onlineMode}
                         checked={o2l_merge==='o2l'}
                         value='o2l'
@@ -220,6 +223,7 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
                 <div className='mr-3 flex-shrink-0'>
                     <span className='my-auto'>Local to Online</span>
                     <Radio
+                        color='primary'
                         disabled={!onlineMode}
                         checked={l2o_merge==='l2o'}
                         value='l2o'

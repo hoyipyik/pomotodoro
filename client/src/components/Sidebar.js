@@ -3,7 +3,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import { ContextApp } from '../tools/Context'
 // import userIcon from '../images/user.png'
 
-const Sidebar = ({settingPageHandler, refreshHandler}) => {
+const Sidebar = ({settingPageHandler, refreshHandler, todoFlagHandler}) => {
 
     const {minSidebarHandler} = useContext(ContextApp)
 
@@ -18,12 +18,12 @@ const Sidebar = ({settingPageHandler, refreshHandler}) => {
             </div>
             <div className='container flex flex-col relative top-6 m-5 w-auto h-2/7'>
                 <div 
-                    onClick={refreshHandler}
+                    onClick={()=>{refreshHandler(); todoFlagHandler(true)}}
                     className='bg-gray-300 hover:bg-slate-300 hover:cursor-pointer rounded-md px-2 py-1 text-center my-3'>
                     To do
                 </div>
                 <div 
-                    onClick={refreshHandler}
+                    onClick={()=>{refreshHandler(); todoFlagHandler(false)}}
                     className='bg-gray-300 hover:bg-slate-300 hover:cursor-pointer rounded-md px-2 py-1 text-center my-3'>
                     Schedule
                 </div>

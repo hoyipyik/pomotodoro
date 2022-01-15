@@ -8,7 +8,7 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
     const [taskName, setTaskName] = useState('')
 
     const {itemAddHandler, modeChangeHandler} = useContext(Context)
-    const {minSidebarHandler} = useContext(ContextApp)
+    const {minSidebarHandler, todoFlag} = useContext(ContextApp)
     const ref = createRef()
 
     useEffect(()=>{
@@ -36,11 +36,7 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
         setTaskName(value)
     }
 
-    const buttonFunction = () =>{
-        addItemFunction(taskName)
-    }
-
-    const addItemFunction = (name) =>{
+    const addItemFunction = (name, type) =>{
         const taskName = name
         const seed = new Date()
         let id = seed.getTime()
@@ -50,22 +46,32 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
             checked: false,
             priority: false,
             pomoTimes: 0,
+            todo: type,
+            push: false,
             subTasks: [],
         }
         if (taskName!==''){
-            itemAddHandler(item)
-            itemAddUploader(item)
+            itemAddHandler(item, type)
+            itemAddUploader(item, type)
         }
         setTaskName('')
+    }
+
+    const buttonFunction = () =>{
+        const type = todoFlag
+        // console.log('button function', type)
+        addItemFunction(taskName, type)
     }
 
     /**
      * Uploader Function
      */
 
-    const itemAddUploader = (item) =>{
+    const itemAddUploader = (item, type) =>{
         if(onlineMode){
-            axios.post('/itemAdd.json', item)
+            const pack = {item, type}
+            const tag = type ? 'todo' : 'schedule'
+            axios.post('/itemAdd.json', pack)
             .then(res=>{
                 console.log('add')
             })
@@ -73,12 +79,14 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
                 console.log(err)
                 window.alert('You are offline now, turn to local ')
                 modeChangeHandler(false, "onlineMode")
-                suddenOfflineHandler('todo')
+                suddenOfflineHandler(tag)
             })
         }else{
             console.log('local add')
         }
     }
+
+    const title = todoFlag ? "What's Your Plan Today" : "This is Your Schedule Book"
 
     return (
         <div className='select-none'>
@@ -87,7 +95,7 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
                     <div 
                         onClick={minSidebarHandler} 
                         className='lg:hidden h-full my-auto mr-2  hover:cursor-pointer'><MenuIcon /></div>
-                    <h1 className='inline md:text-2xl text-xl font-bold font-sans'>What's Your Plan Today</h1>
+                    <h1 className='inline md:text-2xl text-xl font-bold font-sans'>{title}</h1>
                 </div>
                 <input
                     id='addInput'
@@ -107,4 +115,4 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
     )
 }
 
-export default React.memo(Add)
+export default Add

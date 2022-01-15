@@ -8,6 +8,7 @@ import { ContextApp } from './tools/Context'
 
 const App = () =>{
   const [todoFlag, setTodoFlag] = useState(true)
+
   const [onlineMode, setOnlineMode] = useState()
   const [pomoMode, setPomoMode] = useState()
   const [clockMode, setClockMode] = useState()
@@ -45,6 +46,10 @@ const App = () =>{
   
   // flag control
 
+  const todoFlagHandler = (value) =>{
+    setTodoFlag(value)
+  }
+
   const settingPageHandler = (value) =>{
     setSettingPageFlag(value)
   }
@@ -76,7 +81,7 @@ const App = () =>{
     }
   }
 
-  const contextPassingValue = {minSidebarHandler}
+  const contextPassingValue = {minSidebarHandler, todoFlag}
   // console.log(onlineMode, 'render app')
 
   return (
@@ -96,14 +101,16 @@ const App = () =>{
             <div onClick={()=>minSidebarHandler(false)}><Backdrop z={20}/></div>
             <div className='h-screen'>
               <Sidebar 
-              settingPageHandler={settingPageHandler} 
-              refreshHandler={refreshHandler}/> 
+                todoFlagHandler={todoFlagHandler}
+                settingPageHandler={settingPageHandler} 
+                refreshHandler={refreshHandler}/> 
             </div>
         </div> : null
       }
       <div className='flex flex-row min-h-fit'>
         <div className='select-none bg-gray-100 lg:block hidden md:basis-1/5 h-screen overflow-auto'>
           <Sidebar 
+            todoFlagHandler={todoFlagHandler}
             settingPageHandler={settingPageHandler} 
             refreshHandler={refreshHandler}/>
         </div>
