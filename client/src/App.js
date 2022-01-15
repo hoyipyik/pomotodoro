@@ -7,9 +7,9 @@ import Backdrop from './tools/Backdrop'
 import { ContextApp } from './tools/Context'
 
 const App = () =>{
-  const [todoFlag, setTodoFlag] = useState(true)
+  const [todoFlag, setTodoFlag] = useState(false)
 
-  const [onlineMode, setOnlineMode] = useState(true)
+  const [onlineMode, setOnlineMode] = useState(false)
   const [pomoMode, setPomoMode] = useState(true)
   const [clockMode, setClockMode] = useState(false)
   const [settingPageFlag, setSettingPageFlag] = useState(false)

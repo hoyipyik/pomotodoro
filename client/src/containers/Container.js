@@ -137,6 +137,7 @@ const Container = ({ pomoMode, clockMode, onlineMode,
             setTodoData(newData)
         } else {
             const newData = oldTodoData.filter(e=>e.id !== id)
+            console.log(newData, 'minus')
             setTodoData(newData)
         }
 
@@ -158,8 +159,6 @@ const Container = ({ pomoMode, clockMode, onlineMode,
         // const oldData = type ? todoData : scheduleData
         const oldTodoData = todoData
         const oldScheduleData = scheduleData
-        if(name==='push') 
-            pushHandler(id, value, oldScheduleData)
         const newTodoData = oldTodoData.map((e, index) => {
             if (e.id === id) {
                 e[name] = value
@@ -184,6 +183,8 @@ const Container = ({ pomoMode, clockMode, onlineMode,
                 setScheduleData(newScheduleData)
             }
         }
+        if(name==='push') 
+            pushHandler(id, value, oldScheduleData)
     }
 
     /**
