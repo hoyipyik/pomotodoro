@@ -46,13 +46,31 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
             checked: false,
             priority: false,
             pomoTimes: 0,
-            todo: type,
-            push: false,
+            chain: type,
+            push: type,
             subTasks: [],
         }
+        const item_schedule ={
+            id: id,
+            taskName: taskName,
+            checked: false,
+            priority: false,
+            pomoTimes: 0,
+            chain: true,
+            push: true,
+            subTasks: [], 
+        }
         if (taskName!==''){
-            itemAddHandler(item, type)
-            itemAddUploader(item, type)
+            if(type){
+                itemAddHandler(item, type)
+                itemAddHandler(item_schedule, !type)
+                itemAddUploader(item, type)
+                itemAddUploader(item_schedule, !type)
+            }else{
+                itemAddHandler(item, type)
+                itemAddUploader(item, type)
+            }
+            
         }
         setTaskName('')
     }

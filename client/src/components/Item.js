@@ -5,9 +5,9 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Checkbox from '../tools/Checkbox'
 import AddBoxIcon from '@material-ui/icons/AddBox'
 import { Context } from '../tools/Context'
-// import { ContextApp } from '../tools/Context'
+import { ContextApp } from '../tools/Context'
   
-const Item = ({id, taskName, checked, priority, pomoTimes, todo, push}) => {
+const Item = ({id, taskName, checked, priority, pomoTimes, chain, push}) => {
     const blue = {fill:'#155fd8'}
     const gray = {fill:'#7b8088'}
     const seed = [1,1,1,1,1]
@@ -15,7 +15,7 @@ const Item = ({id, taskName, checked, priority, pomoTimes, todo, push}) => {
     const {infoIdHandler, itemDeleteHandler, attributeChangeHandler, pomoMode, 
         attributeChangeUploader, itemDeleteUploader} = useContext(Context)
 
-    // const {todoFlag} = useContext(ContextApp)
+    const {todoFlag} = useContext(ContextApp)
 
     const pomoIcon = seed.map((e, index)=>{
         const element = <AcUnitIcon key={id+index} style={gray} className='hover:cursor-pointer'
@@ -30,24 +30,25 @@ const Item = ({id, taskName, checked, priority, pomoTimes, todo, push}) => {
     })
 
     const attributeChangeFunction = (name, value) =>{
-        const type = todo
-        attributeChangeHandler(name, value, id, type)
-        attributeChangeUploader(name, value, id, type)
+        const type = todoFlag
+        attributeChangeHandler(name, value, id, type, chain)
+        attributeChangeUploader(name, value, id, type, chain)
     }
 
     const deleteFunction = () =>{
-        const type = todo
-        itemDeleteHandler(id, type)
-        itemDeleteUploader(id, type)
+        const type = todoFlag
+        itemDeleteHandler(id, type, chain)
+        itemDeleteUploader(id, type, chain)
     }
 
     const infoDirectFunction = () =>{
-        const type = todo
+        const type = todoFlag
         infoIdHandler(id, type)
     }
 
-    const contentClassName = push ? 'container border-l-4 border-l-gray-400 grid-cols-12 grid border-2 rounded-lg space-y-2 shadow-sm my-2 -z-10' : 'container grid-cols-12 grid border-2 rounded-lg space-y-2 shadow-sm my-2 -z-10'
-    const add2TodoString = push ? 'Task Added' : 'Add Today' 
+    const contentClassName = push ?  (todoFlag ? 'container grid-cols-12 grid border-2 rounded-lg space-y-2 shadow-sm my-2 -z-10' : 'container border-l-4 border-l-gray-400 grid-cols-12 grid border-2 rounded-lg space-y-2 shadow-sm my-2 -z-10') 
+        : 'container grid-cols-12 grid border-2 rounded-lg space-y-2 shadow-sm my-2 -z-10'
+    const add2todoFlagString = push ? 'Task Added' : 'Add Today' 
 
     return (
         <div className={contentClassName}>
@@ -66,14 +67,14 @@ const Item = ({id, taskName, checked, priority, pomoTimes, todo, push}) => {
             </div>
             
             <div className='lg:col-start-9 lg:col-span-3 xl:col-start-10 xl:col-span-2 mx-auto lg:block relative lg:left-7 hidden'>
-            { todo ? 
+            { todoFlag ? 
                 <div>{pomoMode ? <div>{pomoIcon}</div>: null }</div> : 
                 <div 
                     onClick={()=>attributeChangeFunction('push', !push)}
                     className='flex my-auto hover:cursor-pointer border-2 px-2 rounded-xl border-gray-100'>
                     <AddBoxIcon style={push ? blue : null}/>
                     <span  className=' text-sm p-px my-auto ml-3'>
-                        {add2TodoString}
+                        {add2todoFlagString}
                     </span>
                 </div>}
             </div> 

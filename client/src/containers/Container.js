@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import SubInfo from '../components/SubInfo'
 import Add from '../components/Add'
 import Holder from './Holder'
@@ -7,19 +7,17 @@ import axios from '../axios'
 import { Context } from '../tools/Context'
 // import { ContextApp } from '../tools/Context'
 
-const Container = ({pomoMode, clockMode, onlineMode,
-        todoFlag, refresh, modeChangeHandler}) => {
+const Container = ({ pomoMode, clockMode, onlineMode,
+    todoFlag, refresh, modeChangeHandler }) => {
     const [infoFlag, setInfoFlag] = useState(false)
     const [infoSpace, setInfoSpace] = useState({})
     const [infoId, setInfoId] = useState('')
     const [todoData, setTodoData] = useState([])
     const [scheduleData, setScheduleData] = useState([])
 
-    // const [deleteFlag, setDeleteFlag] = useState(false)
-
     // flag handler
 
-    const infoPageHandler = (value) =>{
+    const infoPageHandler = (value) => {
         setInfoFlag(value)
     }
 
@@ -27,52 +25,52 @@ const Container = ({pomoMode, clockMode, onlineMode,
      * Data fetching and setting function
      */
 
-    const setDataFunction = (flag, data, type) =>{
-        if(flag){
+    const setDataFunction = (flag, data, type) => {
+        if (flag) {
             setTodoData(data)
             console.log(`${type} todoData load`, data, onlineMode)
-        }else {
+        } else {
             setScheduleData(data)
             console.log(`${type} scheduleData load`, data, onlineMode)
         }
     }
 
-    const onlineDataFetchingHandler = (flag) =>{
+    const onlineDataFetchingHandler = (flag) => {
         let api = flag ? '/todoData.json' : '/scheduleData.json'
         console.log('fetching online')
         axios.get(api)
-            .then(res=>{
-                const {data} = res
+            .then(res => {
+                const { data } = res
                 const onlineData = data
-                if(onlineData)
+                if (onlineData)
                     setDataFunction(flag, onlineData, 'online')
             })
-            .catch(err=>{
+            .catch(err => {
                 console.log(err)
                 window.alert('You are offline now, turn to local ')
                 modeChangeHandler(false, "onlineMode")
             })
     }
 
-    const localDataFetchingHandler = (flag) =>{
+    const localDataFetchingHandler = (flag) => {
         console.log('fetching local')
         const tagString = flag ? 'localTodoData' : 'localScheduleData'
         const localData = JSON.parse(localStorage.getItem(tagString))
         // console.log('localdata .......', localData)
-            if(localData){
-                setDataFunction(flag, localData, 'local')
-            }else{
-                setDataFunction(flag, [], 'local')
-            }
+        if (localData) {
+            setDataFunction(flag, localData, 'local')
+        } else {
+            setDataFunction(flag, [], 'local')
+        }
     }
 
     // fetching data to state
 
-    useEffect(()=>{
+    useEffect(() => {
         const flag = todoFlag
-        if(onlineMode){
+        if (onlineMode) {
             onlineDataFetchingHandler(flag)
-        }else{
+        } else {
             localDataFetchingHandler(flag)
         }
         return
@@ -80,21 +78,16 @@ const Container = ({pomoMode, clockMode, onlineMode,
 
     // set data to localStorage
 
-    useEffect(()=>{
-        if(!onlineMode){
-            const flag = todoFlag
-            const tag = flag ? 'localTodoData' : 'localScheduleData'
-            const data = flag ? todoData : scheduleData
-            if(data){
-                console.log('set to localStorage', data)
-                localStorage.setItem(tag, JSON.stringify(data))
+    useEffect(() => {
+        if (!onlineMode) {
+            if (todoData) {
+                console.log('[todo] set to localStorage', todoData)
+                localStorage.setItem('localTodoData', JSON.stringify(todoData))
             }
-            // else if(deleteFlag && data){
-            //     setDeleteFlag(false)
-            //     console.log('set to localStorage d', data)
-            //     localStorage.setItem(tag, JSON.stringify(data))
-                
-            // }
+            if (scheduleData) {
+                console.log('[schedule] set to localStorage', scheduleData)
+                localStorage.setItem('localScheduleData', JSON.stringify(scheduleData))
+            }
         }
         return
     }, [todoData, scheduleData, onlineMode])
@@ -103,54 +96,85 @@ const Container = ({pomoMode, clockMode, onlineMode,
      * context function
      */
 
-    const infoIdHandler = (id, type) =>{
+    const infoIdHandler = (id, type) => {
         setInfoId(id)
         const data = type ? todoData : scheduleData
-        data.forEach(e=>{
-            if(e.id===id)
-            setInfoSpace(e)
+        data.forEach(e => {
+            if (e.id === id)
+                setInfoSpace(e)
         })
         infoPageHandler(true)
     }
 
-    const itemDeleteHandler = (id, type) =>{
-        const oldData = type ? todoData : scheduleData
-        const newData = oldData.filter((e)=>e.id!==id)
+    const itemDeleteHandler = (id, type, chain) => {
+        // const oldData = type ? todoData : scheduleData
+        const oldTodoData = todoData
+        const oldScheduleData = scheduleData
+        const newTodoData = oldTodoData.filter((e) => e.id !== id)
+        const newScheduleData = oldScheduleData.filter((e) => e.id !== id)
         // setDeleteFlag(true)
-        if(type)
-            setTodoData(newData)
-        else
-            setScheduleData(newData)
+        if (type) {
+            setTodoData(newTodoData)
+            setScheduleData(newScheduleData)
+        }
+        else {
+            if (chain) {
+                setScheduleData(newScheduleData)
+                setTodoData(newTodoData)
+            } else {
+                setScheduleData(newScheduleData)
+            }
+        }
+
     }
 
-    const itemAddHandler = (item, type) =>{
+
+    const itemAddHandler = (item, type) => {
         const oldData = type ? todoData : scheduleData
         const newData = [...oldData, item]
-        if(type)
+        if (type) {
             setTodoData(newData)
+            setScheduleData(newData)
+        }
         else
             setScheduleData(newData)
     }
 
-    const attributeChangeHandler = (name, value, id, type) =>{
-        const oldData = type ? todoData : scheduleData
-        const newData = oldData.map((e, index)=>{
-            if(e.id === id){
+    const attributeChangeHandler = (name, value, id, type, chain) => {
+        // const oldData = type ? todoData : scheduleData
+        const oldTodoData = todoData
+        const oldScheduleData = scheduleData
+        const newTodoData = oldTodoData.map((e, index) => {
+            if (e.id === id) {
                 e[name] = value
             }
             return e
         })
-        if(type)
-            setTodoData(newData)
-        else
-            setScheduleData(newData)
+        const newScheduleData = oldScheduleData.map((e, index) => {
+            if (e.id === id) {
+                e[name] = value
+            }
+            return e
+        })
+        if (type) {
+            setTodoData(newTodoData)
+            setScheduleData(newScheduleData)
+        }
+        else {
+            if (chain) {
+                setScheduleData(newScheduleData)
+                setTodoData(newTodoData)
+            } else {
+                setScheduleData(newScheduleData)
+            }
+        }
     }
 
     /**
      * sundden offline handler
      */
 
-    const suddenOfflineHandler = (type) =>{
+    const suddenOfflineHandler = (type) => {
         const onlineTodo = todoData
         const tag = type === 'todo' ? 'localTodoData' : 'localScheduleData'
         const localTodo = JSON.parse(localStorage.getItem(tag))
@@ -162,61 +186,83 @@ const Container = ({pomoMode, clockMode, onlineMode,
      * Uploader function Context
      */
 
-    const attributeChangeUploader = (name, value , id, type)=>{
-        if(onlineMode){
-            const data = {name, value, id, type}
+    const attributeChangeUploader = (name, value, id, type, chain) => {
+        if (onlineMode) {
+            const data = { name, value, id, type, chain }
             axios.post('/attributeChange.json', data)
-                .then(res=>{
+                .then(res => {
                     console.log('update')
+                    axios.post('/attributeChange.json', { name, value, id, type: false })
+                        .then(res => {
+                            // console.log('update ...')
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            window.alert('You are offline now, turn to local (add with schdule)')
+                            modeChangeHandler(false, "onlineMode")
+                            suddenOfflineHandler('todo')
+                        })
                 })
-                .catch(err=>{
+                .catch(err => {
                     console.log(err)
                     window.alert('You are offline now, turn to local ')
                     modeChangeHandler(false, "onlineMode")
                     suddenOfflineHandler('todo')
                 })
-        } else{
+        } else {
             console.log('local update')
         }
     }
 
-    const itemDeleteUploader = (id, type)=>{
-        if(onlineMode){
-            const data = {id, type}
+    const itemDeleteUploader = (id, type, chain) => {
+        if (onlineMode) {
+            const data = { id, type, chain }
             axios.post('/itemDelete.json', data)
-                .then(res=>{
+                .then(res => {
                     console.log('delete')
+                    axios.post('/itemDelete.json', { id, type: false })
+                        .then(res => {
+                            // console.log('delete')
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            window.alert('You are offline now, turn to local (add with schdule)')
+                            modeChangeHandler(false, "onlineMode")
+                            suddenOfflineHandler('todo')
+                        })
                 })
-                .catch(err=>{
+                .catch(err => {
                     console.log(err)
                     window.alert('You are offline now, turn to local ')
                     modeChangeHandler(false, "onlineMode")
                     suddenOfflineHandler('todo')
                 })
-        }else{
+        } else {
             console.log('local delete')
         }
     }
 
-    const passingContext = {infoIdHandler, itemAddHandler, itemDeleteHandler, pomoMode, modeChangeHandler,
-        clockMode, attributeChangeHandler, attributeChangeUploader, itemDeleteUploader}
-    
+    const passingContext = {
+        infoIdHandler, itemAddHandler, itemDeleteHandler, pomoMode, modeChangeHandler,
+        clockMode, attributeChangeHandler, attributeChangeUploader, itemDeleteUploader
+    }
+
     // console.log(onlineMode, 'render container')
     return (
         <div className='container w-full h-screen mx-auto px-10 py-5'>
             <Context.Provider value={passingContext}>
-            { infoFlag?
-            <div>
-                <SubInfo infoSpace={infoSpace} infoPageHandler={infoPageHandler}/>
-                <div onClick={()=>infoPageHandler(false)}>
-                    <Backdrop />
+                {infoFlag ?
+                    <div>
+                        <SubInfo infoSpace={infoSpace} infoPageHandler={infoPageHandler} />
+                        <div onClick={() => infoPageHandler(false)}>
+                            <Backdrop />
+                        </div>
+                    </div> : null}
+                <div className='-z-20'>
+                    <Add onlineMode={onlineMode} suddenOfflineHandler={suddenOfflineHandler} />
+                    {todoFlag ? <Holder data={todoData} />
+                        : <Holder data={scheduleData} />}
                 </div>
-            </div>:null}
-            <div className='-z-20'>
-                <Add onlineMode={onlineMode} suddenOfflineHandler={suddenOfflineHandler}/>
-                { todoFlag ? <Holder data={todoData}/>
-                : <Holder data={scheduleData}/> }
-            </div>
             </Context.Provider>
         </div>
     )

@@ -6,11 +6,13 @@ import Checkbox from '../tools/Checkbox'
 import Switch from '../tools/Switch'
 import Slider from '../tools/Slider'
 import { Context } from '../tools/Context'
+import { ContextApp } from '../tools/Context'
 
 const SubInfo = ({infoSpace, infoPageHandler}) => {
-    const {id, taskName, checked, priority, pomoTimes, subTasks, todo, push} = infoSpace
+    const {id, taskName, checked, priority, pomoTimes, subTasks, chain, push} = infoSpace
     const {itemDeleteHandler, attributeChangeHandler, pomoMode, clockMode,
         itemDeleteUploader, attributeChangeUploader} = useContext(Context)
+    const {todoFlag} = useContext(ContextApp)
 
     const [inputHolder, setInputHolder] = useState('')
     const ref = createRef()
@@ -62,9 +64,9 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
     }
 
     const deleteFunction = () =>{
-        const type = todo
-        itemDeleteHandler(id, type)
-        itemDeleteUploader(id, type)
+        const type = todoFlag
+        itemDeleteHandler(id, type, chain)
+        itemDeleteUploader(id, type, chain)
         infoPageHandler(false)
     }
 
@@ -78,9 +80,9 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
     }
 
     const attributeChangeFunction = (name, value) =>{
-        const type = todo
-        attributeChangeHandler(name, value, id, type)
-        attributeChangeUploader(name, value, id, type)
+        const type = todoFlag
+        attributeChangeHandler(name, value, id, type, chain)
+        attributeChangeUploader(name, value, id, type, chain)
     }
 
     /**
