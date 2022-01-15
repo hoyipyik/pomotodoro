@@ -12,7 +12,7 @@ const Item = ({id, taskName, checked, priority, pomoTimes, chain, push}) => {
     const gray = {fill:'#7b8088'}
     const seed = [1,1,1,1,1]
 
-    const {infoIdHandler, itemDeleteHandler, attributeChangeHandler, pomoMode, 
+    const {infoIdHandler, itemDeleteHandler, attributeChangeHandler, pomoMode, pushHandler,
         attributeChangeUploader, itemDeleteUploader} = useContext(Context)
 
     const {todoFlag} = useContext(ContextApp)
@@ -39,6 +39,11 @@ const Item = ({id, taskName, checked, priority, pomoTimes, chain, push}) => {
         const type = todoFlag
         itemDeleteHandler(id, type, chain)
         itemDeleteUploader(id, type, chain)
+    }
+
+    const pushFuntion = (value) =>{
+        attributeChangeFunction('push', value)
+        // pushHandler(id, value)
     }
 
     const infoDirectFunction = () =>{
@@ -70,7 +75,7 @@ const Item = ({id, taskName, checked, priority, pomoTimes, chain, push}) => {
             { todoFlag ? 
                 <div>{pomoMode ? <div>{pomoIcon}</div>: null }</div> : 
                 <div 
-                    onClick={()=>attributeChangeFunction('push', !push)}
+                    onClick={()=>pushFuntion(!push)}
                     className='flex my-auto hover:cursor-pointer border-2 px-2 rounded-xl border-gray-100'>
                     <AddBoxIcon style={push ? blue : null}/>
                     <span  className=' text-sm p-px my-auto ml-3'>

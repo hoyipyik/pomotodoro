@@ -128,6 +128,20 @@ const Container = ({ pomoMode, clockMode, onlineMode,
 
     }
 
+    const pushHandler = (id, add, scheduleData) => {
+        // const scheduleData = [...scheduleData]
+        const oldTodoData = [...todoData]
+        if (add) {
+            const itemArray = scheduleData.filter(e=>e.id === id)
+            const newData = [...oldTodoData, ...itemArray]
+            setTodoData(newData)
+        } else {
+            const newData = oldTodoData.filter(e=>e.id !== id)
+            setTodoData(newData)
+        }
+
+    }
+
 
     const itemAddHandler = (item, type) => {
         const oldData = type ? todoData : scheduleData
@@ -144,6 +158,8 @@ const Container = ({ pomoMode, clockMode, onlineMode,
         // const oldData = type ? todoData : scheduleData
         const oldTodoData = todoData
         const oldScheduleData = scheduleData
+        if(name==='push') 
+            pushHandler(id, value, oldScheduleData)
         const newTodoData = oldTodoData.map((e, index) => {
             if (e.id === id) {
                 e[name] = value
@@ -243,8 +259,9 @@ const Container = ({ pomoMode, clockMode, onlineMode,
     }
 
     const passingContext = {
-        infoIdHandler, itemAddHandler, itemDeleteHandler, pomoMode, modeChangeHandler,
-        clockMode, attributeChangeHandler, attributeChangeUploader, itemDeleteUploader
+        pushHandler, infoIdHandler, itemAddHandler, itemDeleteHandler,
+        pomoMode, modeChangeHandler, clockMode, attributeChangeHandler,
+        attributeChangeUploader, itemDeleteUploader
     }
 
     // console.log(onlineMode, 'render container')
