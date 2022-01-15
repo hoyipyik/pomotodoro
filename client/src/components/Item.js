@@ -3,6 +3,7 @@ import AcUnitIcon from '@material-ui/icons/AcUnit'
 import DeleteIcon from '@material-ui/icons/Delete'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Checkbox from '../tools/Checkbox'
+import AddBoxIcon from '@material-ui/icons/AddBox'
 import { Context } from '../tools/Context'
 // import { ContextApp } from '../tools/Context'
   
@@ -45,8 +46,11 @@ const Item = ({id, taskName, checked, priority, pomoTimes, todo, push}) => {
         infoIdHandler(id, type)
     }
 
+    const contentClassName = push ? 'container border-l-4 border-l-gray-400 grid-cols-12 grid border-2 rounded-lg space-y-2 shadow-sm my-2 -z-10' : 'container grid-cols-12 grid border-2 rounded-lg space-y-2 shadow-sm my-2 -z-10'
+    const add2TodoString = push ? 'Task Added' : 'Add Today' 
+
     return (
-        <div className='container grid-cols-12 grid border-2 rounded-lg space-y-2 shadow-sm my-2 -z-10'>
+        <div className={contentClassName}>
             <div className='col-start-1 col-span-2 sm:col-span-1'>
                 <Checkbox 
                     checked={checked} 
@@ -60,10 +64,19 @@ const Item = ({id, taskName, checked, priority, pomoTimes, todo, push}) => {
                 fontWeight: priority ? "bold" : null}}>
                    {taskName} 
             </div>
-            { pomoMode ?
+            
             <div className='lg:col-start-9 lg:col-span-3 xl:col-start-10 xl:col-span-2 mx-auto lg:block relative lg:left-7 hidden'>
-                {pomoIcon}
-            </div> : null }
+            { todo ? 
+                <div>{pomoMode ? <div>{pomoIcon}</div>: null }</div> : 
+                <div 
+                    onClick={()=>attributeChangeFunction('push', !push)}
+                    className='flex my-auto hover:cursor-pointer border-2 px-2 rounded-xl border-gray-100'>
+                    <AddBoxIcon style={push ? blue : null}/>
+                    <span  className=' text-sm p-px my-auto ml-3'>
+                        {add2TodoString}
+                    </span>
+                </div>}
+            </div> 
             <div className='col-start-11 sm:col-start-12 mx-auto'>
                 <DeleteIcon 
                     onClick={deleteFunction}

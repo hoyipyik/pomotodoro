@@ -15,7 +15,7 @@ const Container = ({pomoMode, clockMode, onlineMode,
     const [todoData, setTodoData] = useState([])
     const [scheduleData, setScheduleData] = useState([])
 
-    const [deleteFlag, setDeleteFlag] = useState(false)
+    // const [deleteFlag, setDeleteFlag] = useState(false)
 
     // flag handler
 
@@ -30,10 +30,10 @@ const Container = ({pomoMode, clockMode, onlineMode,
     const setDataFunction = (flag, data, type) =>{
         if(flag){
             setTodoData(data)
-            console.log(`${type} todoData load`, data)
+            console.log(`${type} todoData load`, data, onlineMode)
         }else {
             setScheduleData(data)
-            console.log(`${type} scheduleData load`, data)
+            console.log(`${type} scheduleData load`, data, onlineMode)
         }
     }
 
@@ -85,15 +85,16 @@ const Container = ({pomoMode, clockMode, onlineMode,
             const flag = todoFlag
             const tag = flag ? 'localTodoData' : 'localScheduleData'
             const data = flag ? todoData : scheduleData
-            if(data[0]!==undefined){
+            if(data){
                 console.log('set to localStorage', data)
                 localStorage.setItem(tag, JSON.stringify(data))
-            }else if(deleteFlag && data){
-                setDeleteFlag(false)
-                console.log('set to localStorage', data)
-                localStorage.setItem(tag, JSON.stringify(data))
-                
             }
+            // else if(deleteFlag && data){
+            //     setDeleteFlag(false)
+            //     console.log('set to localStorage d', data)
+            //     localStorage.setItem(tag, JSON.stringify(data))
+                
+            // }
         }
         return
     }, [todoData, scheduleData, onlineMode])
@@ -115,7 +116,7 @@ const Container = ({pomoMode, clockMode, onlineMode,
     const itemDeleteHandler = (id, type) =>{
         const oldData = type ? todoData : scheduleData
         const newData = oldData.filter((e)=>e.id!==id)
-        setDeleteFlag(true)
+        // setDeleteFlag(true)
         if(type)
             setTodoData(newData)
         else
