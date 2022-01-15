@@ -68,7 +68,7 @@ const Container = ({pomoMode, clockMode, onlineMode,
 
     useEffect(()=>{
         const flag = todoFlag
-        if(onlineMode||onlineMode===undefined){
+        if(onlineMode){
             onlineDataFetchingHandler(flag)
         }else{
             localDataFetchingHandler(flag)
@@ -83,7 +83,7 @@ const Container = ({pomoMode, clockMode, onlineMode,
             const flag = todoFlag
             const tag = flag ? 'localTodoData' : 'localScheduleData'
             const data = flag ? todoData : scheduleData
-            if(data[0]!==undefined){
+            if(data){
                 console.log('set to localStorage', data)
                 localStorage.setItem(tag, JSON.stringify(data))
             }
