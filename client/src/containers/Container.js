@@ -15,6 +15,8 @@ const Container = ({pomoMode, clockMode, onlineMode,
     const [todoData, setTodoData] = useState([])
     const [scheduleData, setScheduleData] = useState([])
 
+    const [deleteFlag, setDeleteFlag] = useState(false)
+
     // flag handler
 
     const infoPageHandler = (value) =>{
@@ -83,9 +85,14 @@ const Container = ({pomoMode, clockMode, onlineMode,
             const flag = todoFlag
             const tag = flag ? 'localTodoData' : 'localScheduleData'
             const data = flag ? todoData : scheduleData
-            if(data){
+            if(data[0]!==undefined){
                 console.log('set to localStorage', data)
                 localStorage.setItem(tag, JSON.stringify(data))
+            }else if(deleteFlag && data){
+                setDeleteFlag(false)
+                console.log('set to localStorage', data)
+                localStorage.setItem(tag, JSON.stringify(data))
+                
             }
         }
         return
@@ -108,6 +115,7 @@ const Container = ({pomoMode, clockMode, onlineMode,
     const itemDeleteHandler = (id, type) =>{
         const oldData = type ? todoData : scheduleData
         const newData = oldData.filter((e)=>e.id!==id)
+        setDeleteFlag(true)
         if(type)
             setTodoData(newData)
         else
