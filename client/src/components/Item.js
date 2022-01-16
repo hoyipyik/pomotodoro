@@ -78,7 +78,7 @@ const Item = ({id, taskName, checked, priority, pomoTimes, chain, push}) => {
                     onClick={()=>pushFuntion(!push)}
                     className='flex my-auto hover:cursor-pointer border-2 px-2 rounded-xl border-gray-100'>
                     <AddBoxIcon style={push ? blue : null}/>
-                    <span  className=' text-sm p-px my-auto ml-3'>
+                    <span  className=' text-sm p-px my-auto ml-3 select-none'>
                         {add2todoFlagString}
                     </span>
                 </div>}
