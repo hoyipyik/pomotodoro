@@ -41,11 +41,6 @@ const Item = ({id, taskName, checked, priority, pomoTimes, chain, push}) => {
         itemDeleteUploader(id, type, chain)
     }
 
-    const pushFuntion = (value) =>{
-        attributeChangeFunction('push', value)
-        // pushHandler(id, value)
-    }
-
     const infoDirectFunction = () =>{
         const type = todoFlag
         infoIdHandler(id, type)
@@ -75,7 +70,7 @@ const Item = ({id, taskName, checked, priority, pomoTimes, chain, push}) => {
             { todoFlag ? 
                 <div>{pomoMode ? <div>{pomoIcon}</div>: null }</div> : 
                 <div 
-                    onClick={()=>pushFuntion(!push)}
+                    onClick={()=>attributeChangeFunction('push', !push)}
                     className='flex my-auto hover:cursor-pointer border-2 px-2 rounded-xl border-gray-100'>
                     <AddBoxIcon style={push ? blue : null}/>
                     <span  className=' text-sm p-px my-auto ml-3 select-none'>

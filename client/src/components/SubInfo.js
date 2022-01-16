@@ -149,6 +149,15 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
                                     onChange={()=>attributeChangeFunction('priority', !priority)}
                                 />
                             </div>
+                            { todoFlag ? null :
+                            <div className='basis3/7 my-auto mx-4'>
+                                <span >Loaded</span>
+                                <Switch 
+                                    color='primary'
+                                    checked={push}
+                                    onChange={()=>attributeChangeFunction('push', !push)}
+                                />
+                            </div> }
                         </div>
                         { pomoMode ?
                         <div className='my-auto select-none'>
