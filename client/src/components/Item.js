@@ -31,12 +31,12 @@ const Item = ({id, taskName, checked, priority, pomoTimes, chain, push}) => {
 
     const attributeChangeFunction = (name, value) =>{
         attributeChangeHandler(name, value, id)
-        attributeChangeUploader(name, value, id)
+        attributeChangeUploader(name, value, id, todoFlag, chain)
     }
 
     const deleteFunction = () =>{
         itemDeleteHandler(id)
-        itemDeleteUploader(id)
+        itemDeleteUploader(id, todoFlag)
     }
 
     const infoDirectFunction = () =>{
