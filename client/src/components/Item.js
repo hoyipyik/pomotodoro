@@ -12,7 +12,7 @@ const Item = ({id, taskName, checked, priority, pomoTimes, chain, push}) => {
     const gray = {fill:'#7b8088'}
     const seed = [1,1,1,1,1]
 
-    const {infoIdHandler, itemDeleteHandler, attributeChangeHandler, pomoMode, pushHandler,
+    const {infoIdHandler, itemDeleteHandler, attributeChangeHandler, pomoMode,
         attributeChangeUploader, itemDeleteUploader} = useContext(Context)
 
     const {todoFlag} = useContext(ContextApp)
@@ -31,13 +31,13 @@ const Item = ({id, taskName, checked, priority, pomoTimes, chain, push}) => {
 
     const attributeChangeFunction = (name, value) =>{
         const type = todoFlag
-        attributeChangeHandler(name, value, id, type, chain)
+        attributeChangeHandler(name, value, id)
         attributeChangeUploader(name, value, id, type, chain)
     }
 
     const deleteFunction = () =>{
         const type = todoFlag
-        itemDeleteHandler(id, type, chain)
+        itemDeleteHandler(id)
         itemDeleteUploader(id, type, chain)
     }
 

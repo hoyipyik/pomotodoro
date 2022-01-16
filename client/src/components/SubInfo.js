@@ -9,7 +9,8 @@ import { Context } from '../tools/Context'
 import { ContextApp } from '../tools/Context'
 
 const SubInfo = ({infoSpace, infoPageHandler}) => {
-    const {id, taskName, checked, priority, pomoTimes, subTasks, chain, push} = infoSpace
+    const {id, taskName, checked, priority, pomoTimes, 
+        subTasks, chain, push} = infoSpace
     const {itemDeleteHandler, attributeChangeHandler, pomoMode, clockMode,
         itemDeleteUploader, attributeChangeUploader} = useContext(Context)
     const {todoFlag} = useContext(ContextApp)
@@ -65,7 +66,7 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
 
     const deleteFunction = () =>{
         const type = todoFlag
-        itemDeleteHandler(id, type, chain)
+        itemDeleteHandler(id)
         itemDeleteUploader(id, type, chain)
         infoPageHandler(false)
     }
@@ -81,7 +82,7 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
 
     const attributeChangeFunction = (name, value) =>{
         const type = todoFlag
-        attributeChangeHandler(name, value, id, type, chain)
+        attributeChangeHandler(name, value, id)
         attributeChangeUploader(name, value, id, type, chain)
     }
 

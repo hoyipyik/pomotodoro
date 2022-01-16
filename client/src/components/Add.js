@@ -77,7 +77,6 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
 
     const buttonFunction = () =>{
         const type = todoFlag
-        // console.log('button function', type)
         addItemFunction(taskName, type)
     }
 

@@ -18,12 +18,12 @@ const Sidebar = ({settingPageHandler, refreshHandler, todoFlagHandler}) => {
             </div>
             <div className='container flex flex-col relative top-6 m-5 w-auto h-2/7'>
                 <div 
-                    onClick={()=>{todoFlagHandler(true)}}
+                    onClick={()=>{refreshHandler(); todoFlagHandler(true)}}
                     className='bg-gray-300 hover:bg-slate-300 hover:cursor-pointer rounded-md px-2 py-1 text-center my-3'>
                     To do
                 </div>
                 <div 
-                    onClick={()=>{ todoFlagHandler(false)}}
+                    onClick={()=>{refreshHandler(); todoFlagHandler(false)}}
                     className='bg-gray-300 hover:bg-slate-300 hover:cursor-pointer rounded-md px-2 py-1 text-center my-3'>
                     Schedule
                 </div>

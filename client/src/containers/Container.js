@@ -5,7 +5,6 @@ import Holder from './Holder'
 import Backdrop from '../tools/Backdrop'
 import axios from '../axios'
 import { Context } from '../tools/Context'
-// import { ContextApp } from '../tools/Context'
 
 const Container = ({ pomoMode, clockMode, onlineMode,
     todoFlag, refresh, modeChangeHandler }) => {
@@ -76,22 +75,6 @@ const Container = ({ pomoMode, clockMode, onlineMode,
         return
     }, [refresh, onlineMode])
 
-    // set data to localStorage
-
-    useEffect(() => {
-        if (!onlineMode) {
-            if (todoData) {
-                console.log('[todo] set to localStorage', todoData)
-                localStorage.setItem('localTodoData', JSON.stringify(todoData))
-            }
-            if (scheduleData) {
-                console.log('[schedule] set to localStorage', scheduleData)
-                localStorage.setItem('localScheduleData', JSON.stringify(scheduleData))
-            }
-        }
-        return
-    }, [todoData, scheduleData, onlineMode])
-
     /**
      * context function
      */
@@ -106,85 +89,72 @@ const Container = ({ pomoMode, clockMode, onlineMode,
         infoPageHandler(true)
     }
 
-    const itemDeleteHandler = (id, type, chain) => {
-        // const oldData = type ? todoData : scheduleData
+    const itemDeleteHandler = (id) => {
         const oldTodoData = todoData
         const oldScheduleData = scheduleData
         const newTodoData = oldTodoData.filter((e) => e.id !== id)
         const newScheduleData = oldScheduleData.filter((e) => e.id !== id)
-        // setDeleteFlag(true)
-        if (type) {
-            setTodoData(newTodoData)
-            setScheduleData(newScheduleData)
-        }
-        else {
-            if (chain) {
-                setScheduleData(newScheduleData)
-                setTodoData(newTodoData)
-            } else {
-                setScheduleData(newScheduleData)
-            }
-        }
-
+        setTodoData(newTodoData)
+        localStorage.setItem('localTodoData', JSON.stringify(newTodoData))
+        setScheduleData(newScheduleData)
+        localStorage.setItem('localScheduleData', JSON.stringify(newScheduleData))
     }
 
     const pushHandler = (id, add, scheduleData) => {
-        // const scheduleData = [...scheduleData]
         const oldTodoData = [...todoData]
         if (add) {
-            const itemArray = scheduleData.filter(e=>e.id === id)
+            let itemArray = scheduleData.filter(e => e.id === id)
             const newData = [...oldTodoData, ...itemArray]
             setTodoData(newData)
+            localStorage.setItem('localTodoData', JSON.stringify(newData))
         } else {
-            const newData = oldTodoData.filter(e=>e.id !== id)
+            const newData = oldTodoData.filter(e => e.id !== id)
             console.log(newData, 'minus')
             setTodoData(newData)
+            localStorage.setItem('localTodoData', JSON.stringify(newData))
         }
-
     }
-
 
     const itemAddHandler = (item, type) => {
         const oldData = type ? todoData : scheduleData
         const newData = [...oldData, item]
         if (type) {
             setTodoData(newData)
+            localStorage.setItem('localTodoData', JSON.stringify(newData))
             setScheduleData(newData)
+            localStorage.setItem('localScheduleData', JSON.stringify(newData))
         }
-        else
+        else {
             setScheduleData(newData)
+            localStorage.setItem('localScheduleData', JSON.stringify(newData))
+        }
     }
 
-    const attributeChangeHandler = (name, value, id, type, chain) => {
-        // const oldData = type ? todoData : scheduleData
+    const attributeChangeHandler = (name, value, id) => {
         const oldTodoData = todoData
         const oldScheduleData = scheduleData
         const newTodoData = oldTodoData.map((e, index) => {
             if (e.id === id) {
                 e[name] = value
+                if (name === 'push')
+                    e.chain = value
             }
             return e
         })
         const newScheduleData = oldScheduleData.map((e, index) => {
             if (e.id === id) {
                 e[name] = value
+                if (name === 'push')
+                    e.chain = value
             }
             return e
         })
-        if (type) {
-            setTodoData(newTodoData)
-            setScheduleData(newScheduleData)
-        }
-        else {
-            if (chain) {
-                setScheduleData(newScheduleData)
-                setTodoData(newTodoData)
-            } else {
-                setScheduleData(newScheduleData)
-            }
-        }
-        if(name==='push') 
-            pushHandler(id, value, oldScheduleData)
+        setTodoData(newTodoData)
+        localStorage.setItem('localTodoData', JSON.stringify(newTodoData))
+        setScheduleData(newScheduleData)
+        localStorage.setItem('localScheduleData', JSON.stringify(newScheduleData))
+        if (name === 'push')
+            pushHandler(id, value, newScheduleData)
     }
 
     /**
@@ -203,22 +173,13 @@ const Container = ({ pomoMode, clockMode, onlineMode,
      * Uploader function Context
      */
 
+
     const attributeChangeUploader = (name, value, id, type, chain) => {
         if (onlineMode) {
             const data = { name, value, id, type, chain }
             axios.post('/attributeChange.json', data)
                 .then(res => {
                     console.log('update')
-                    axios.post('/attributeChange.json', { name, value, id, type: false })
-                        .then(res => {
-                            // console.log('update ...')
-                        })
-                        .catch(err => {
-                            console.log(err)
-                            window.alert('You are offline now, turn to local (add with schdule)')
-                            modeChangeHandler(false, "onlineMode")
-                            suddenOfflineHandler('todo')
-                        })
                 })
                 .catch(err => {
                     console.log(err)
@@ -226,6 +187,7 @@ const Container = ({ pomoMode, clockMode, onlineMode,
                     modeChangeHandler(false, "onlineMode")
                     suddenOfflineHandler('todo')
                 })
+
         } else {
             console.log('local update')
         }
@@ -237,16 +199,6 @@ const Container = ({ pomoMode, clockMode, onlineMode,
             axios.post('/itemDelete.json', data)
                 .then(res => {
                     console.log('delete')
-                    axios.post('/itemDelete.json', { id, type: false })
-                        .then(res => {
-                            // console.log('delete')
-                        })
-                        .catch(err => {
-                            console.log(err)
-                            window.alert('You are offline now, turn to local (add with schdule)')
-                            modeChangeHandler(false, "onlineMode")
-                            suddenOfflineHandler('todo')
-                        })
                 })
                 .catch(err => {
                     console.log(err)
