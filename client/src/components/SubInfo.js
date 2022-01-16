@@ -65,9 +65,8 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
     }
 
     const deleteFunction = () =>{
-        const type = todoFlag
         itemDeleteHandler(id)
-        itemDeleteUploader(id, type, chain)
+        itemDeleteUploader(id)
         infoPageHandler(false)
     }
 
@@ -81,9 +80,8 @@ const SubInfo = ({infoSpace, infoPageHandler}) => {
     }
 
     const attributeChangeFunction = (name, value) =>{
-        const type = todoFlag
         attributeChangeHandler(name, value, id)
-        attributeChangeUploader(name, value, id, type, chain)
+        attributeChangeUploader(name, value, id)
     }
 
     /**

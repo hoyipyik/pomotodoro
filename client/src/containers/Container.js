@@ -174,9 +174,9 @@ const Container = ({ pomoMode, clockMode, onlineMode,
      */
 
 
-    const attributeChangeUploader = (name, value, id, type, chain) => {
+    const attributeChangeUploader = (name, value, id) => {
         if (onlineMode) {
-            const data = { name, value, id, type, chain }
+            const data = { name, value, id }
             axios.post('/attributeChange.json', data)
                 .then(res => {
                     console.log('update')
@@ -193,9 +193,9 @@ const Container = ({ pomoMode, clockMode, onlineMode,
         }
     }
 
-    const itemDeleteUploader = (id, type, chain) => {
+    const itemDeleteUploader = (id) => {
         if (onlineMode) {
-            const data = { id, type, chain }
+            const data = { id }
             axios.post('/itemDelete.json', data)
                 .then(res => {
                     console.log('delete')

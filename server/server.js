@@ -45,18 +45,20 @@ app.get('/scheduleData.json', (req, res)=>{
 
 app.post('/itemDelete.json', (req, res)=>{
     const rawData = req.body
-    const {id, type} = rawData
-    const collectionName = type ? 'todoData' : 'scheduleData'
+    const {id} = rawData
     const queryFactor = {id: id}
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db)=>{
         if(err) throw err
         let dbo = db.db('Ho_Yipyik')
-        dbo.collection(collectionName).deleteOne(queryFactor, (err1, res1)=>{
+        dbo.collection('todoData').deleteOne(queryFactor, (err1, res1)=>{
             if(err1) throw err1
-            console.log("delete success")
-            res.send({res1, msg:'delete'})
-            db.close()
+            dbo.collection('scheduleData').deleteOne(queryFactor, (err2, res2)=>{
+                if(err2) throw err2
+                console.log("delete success")
+                res.send({res1, res2, msg:'delete'})
+                db.close()
+            })
         })
     })
 })
