@@ -8,7 +8,7 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
     const [taskName, setTaskName] = useState('')
 
     const {itemAddHandler, modeChangeHandler} = useContext(Context)
-    const {minSidebarHandler, todoFlag} = useContext(ContextApp)
+    const {minSidebarHandler, todoFlag, account} = useContext(ContextApp)
     const ref = createRef()
 
     useEffect(()=>{
@@ -86,7 +86,7 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
 
     const itemAddUploader = (item, type) =>{
         if(onlineMode){
-            const pack = {item, type}
+            const pack = {item, type, account}
             const tag = type ? 'todo' : 'schedule'
             axios.post('/itemAdd.json', pack)
             .then(res=>{

@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
+import { ContextApp } from '../tools/Context'
 import Switch from '../tools/Switch'
 import Radio from '../tools/Radio'
 import axios from '../axios'
 
-const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHandler}) => {
+const Setting = ({ onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHandler }) => {
     const [o2l_override, setO2l_override] = useState('')
     const [l2o_override, setL2o_override] = useState('')
     const [o2l_merge, setO2l_merge] = useState('')
@@ -15,8 +16,10 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
     const [localTodoData, setLocalTodoData] = useState([])
     const [localScheduleData, setLocalScheduleData] = useState([])
 
-    useEffect(()=>{
-        if(!onlineMode){
+    const { account } = useContext(ContextApp)
+
+    useEffect(() => {
+        if (!onlineMode) {
             setL2o_merge('')
             setL2o_override('')
             setO2l_merge('')
@@ -29,63 +32,66 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
      * fetching data function
      */
 
-    const onlineDataFetchingFunction = () =>{
-        axios.get('/todoData.json')
-            .then(res=>{
-                const {data} = res
-                // console.log(data, '[setting.js]: onelineTodoData fetched')
-                if(data)
-                    setOnlineTodoData(data)
-            })
-            .catch(err=>console.log(err))
-        axios.get('/scheduleData.json')
-            .then(res=>{
-                const {data} = res
-                // console.log(data, '[setting.js]: oneline Schedule Data fetched')
-                if(data)
-                    setOnlineScheduleData(data)
-            })
-            .catch(err=>console.log(err)) 
+    const onlineDataFetchingFunction = () => {
+        console.log(account)
+        if (account) {
+            axios.post('/todoData.json', account)
+                .then(res => {
+                    const { data } = res
+                    // console.log(data, '[setting.js]: onelineTodoData fetched')
+                    if (data)
+                        setOnlineTodoData(data)
+                })
+                .catch(err => console.log(err))
+            axios.post('/scheduleData.json', account)
+                .then(res => {
+                    const { data } = res
+                    // console.log(data, '[setting.js]: oneline Schedule Data fetched')
+                    if (data)
+                        setOnlineScheduleData(data)
+                })
+                .catch(err => console.log(err))
+        }
     }
 
-    const localDataFetchingFunction = () =>{
+    const localDataFetchingFunction = () => {
         const localtodo = JSON.parse(localStorage.getItem('localTodoData'))
         const localschedule = JSON.parse(localStorage.getItem('localScheduleData'))
-        if(localtodo)
+        if (localtodo)
             setLocalTodoData(localtodo)
-        if(localschedule)
+        if (localschedule)
             setLocalScheduleData(localschedule)
         // console.log('[setting.js]: local todo&schedule data fetched')
     }
 
     //
 
-    useEffect(()=>{
+    useEffect(() => {
         onlineDataFetchingFunction()
         localDataFetchingFunction()
-        return 
+        return
     }, [])
 
-    const overrideOnline2LocalRadioFunction = (e) =>{
-        const {value} = e.target
+    const overrideOnline2LocalRadioFunction = (e) => {
+        const { value } = e.target
         setO2l_override(value)
         setL2o_override('')
     }
 
-    const overrideLocal2OnlineRadioFunction = (e) =>{
-        const {value} = e.target
+    const overrideLocal2OnlineRadioFunction = (e) => {
+        const { value } = e.target
         setL2o_override(value)
         setO2l_override('')
     }
 
-    const mergeOnline2LocalRadioFunction = (e) =>{
-        const {value} = e.target
+    const mergeOnline2LocalRadioFunction = (e) => {
+        const { value } = e.target
         setO2l_merge(value)
         setL2o_merge('')
     }
 
-    const mergeLocal2OnlineRadioFunction = (e) =>{
-        const {value} = e.target
+    const mergeLocal2OnlineRadioFunction = (e) => {
+        const { value } = e.target
         setL2o_merge(value)
         setO2l_merge('')
     }
@@ -94,20 +100,20 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
      * merged data push function
      */
 
-    const onlinePushHandler = (todo, schedule, type) =>{
-        axios.post('/merge_todo.json', todo)
-            .then(res=>{
-                axios.post('/merge_schedule.json', schedule)
-                    .then(res=>{
+    const onlinePushHandler = (todo, schedule, type) => {
+        axios.post('/merge_todo.json', { todo, account })
+            .then(res => {
+                axios.post('/merge_schedule.json', { schedule, account })
+                    .then(res => {
                         console.log(`[${type}] local to online success`)
                         refreshHandler()
                     })
-                    .catch(err=>console.log(err))
+                    .catch(err => console.log(err))
             })
-            .catch(err=>console.log(err))
+            .catch(err => console.log(err))
     }
 
-    const localPushHandler = (todo, schedule, type) =>{
+    const localPushHandler = (todo, schedule, type) => {
         localStorage.setItem('localTodoData', JSON.stringify(todo))
         localStorage.setItem('localScheduleData', JSON.stringify(schedule))
         console.log(`[${type}] online to local success`)
@@ -116,65 +122,65 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
 
     // 
 
-    const overrideButtonFunction = () =>{
-        if(onlineMode){
-            if(o2l_override==='o2l'){
-                localPushHandler(onlineTodoData, onlineScheduleData, 'override')    
-            }else if(l2o_override==='l2o'){
+    const overrideButtonFunction = () => {
+        if (onlineMode) {
+            if (o2l_override === 'o2l') {
+                localPushHandler(onlineTodoData, onlineScheduleData, 'override')
+            } else if (l2o_override === 'l2o') {
                 onlinePushHandler(localTodoData, localScheduleData, 'override')
             }
         }
     }
 
-    const mergeButtonFunction = () =>{
-        if(onlineMode){
+    const mergeButtonFunction = () => {
+        if (onlineMode) {
             let dulplicatedRemovedtodoData = []
-            const dulplicatedRmovedtodoDataId = [...onlineTodoData, ...localTodoData].reduce((prev, cur)=>{
-                if(prev.indexOf(cur.id) === -1){
+            const dulplicatedRmovedtodoDataId = [...onlineTodoData, ...localTodoData].reduce((prev, cur) => {
+                if (prev.indexOf(cur.id) === -1) {
                     prev.push(cur.id)
                     dulplicatedRemovedtodoData.push(cur)
                 }
                 return prev
             }, [])
             let dulplicatedRemovedscheduleData = []
-            const dulplicatedRemovedscheduleDataId = [...onlineScheduleData, ...localScheduleData].reduce((prev, cur)=>{
-                if(prev.indexOf(cur.id) === -1){
+            const dulplicatedRemovedscheduleDataId = [...onlineScheduleData, ...localScheduleData].reduce((prev, cur) => {
+                if (prev.indexOf(cur.id) === -1) {
                     prev.push(cur.id)
                     dulplicatedRemovedscheduleData.push(cur)
                 }
                 return prev
             }, [])
 
-            if(o2l_merge==='o2l'){
-                localPushHandler(dulplicatedRemovedtodoData, dulplicatedRemovedscheduleData, 'merge')    
-            }else if(l2o_merge==='l2o'){
+            if (o2l_merge === 'o2l') {
+                localPushHandler(dulplicatedRemovedtodoData, dulplicatedRemovedscheduleData, 'merge')
+            } else if (l2o_merge === 'l2o') {
                 onlinePushHandler(dulplicatedRemovedtodoData, dulplicatedRemovedscheduleData, 'merge')
             }
         }
     }
 
-    
 
-    const switchZone = 
-    <div className='pt-2'>
-        <div className='font-bold'>Mode</div>
-        <div className='pt-2 flex gap-1 flex-wrap'>
-            <div className='my-1.5 mr-2'>
-                <span className='my-auto'>Online</span>
-                <Switch color='primary' onClick={()=>modeChangeHandler(!onlineMode, 'onlineMode')} checked={onlineMode}/>
-            </div>
-            <div className=' my-1.5 mr-2'>
-                <span className='my-auto'>PomoMode</span>
-                <Switch color='primary' onClick={()=>modeChangeHandler(!pomoMode, 'pomoMode')} checked={pomoMode}/>
-            </div>
-            <div className=' my-1.5 mr-2'>
-                <span className='my-auto'>clockMode</span>
-                <Switch color='primary' onClick={()=>modeChangeHandler(!clockMode, 'clockMode')} checked={clockMode && (pomoMode===true)} disabled={pomoMode===false}/>
+
+    const switchZone =
+        <div className='pt-2'>
+            <div className='font-bold'>Mode</div>
+            <div className='pt-2 flex gap-1 flex-wrap'>
+                <div className='my-1.5 mr-2'>
+                    <span className='my-auto'>Online</span>
+                    <Switch color='primary' onClick={() => modeChangeHandler(!onlineMode, 'onlineMode')} checked={onlineMode} disabled={account === ''} />
+                </div>
+                <div className=' my-1.5 mr-2'>
+                    <span className='my-auto'>PomoMode</span>
+                    <Switch color='primary' onClick={() => modeChangeHandler(!pomoMode, 'pomoMode')} checked={pomoMode} />
+                </div>
+                <div className=' my-1.5 mr-2'>
+                    <span className='my-auto'>clockMode</span>
+                    <Switch color='primary' onClick={() => modeChangeHandler(!clockMode, 'clockMode')} checked={clockMode && (pomoMode === true)} disabled={pomoMode === false} />
+                </div>
             </div>
         </div>
-    </div>
 
-    const overrideButtonZone = 
+    const overrideButtonZone =
         <div className='pt-2'>
             <div className='font-bold'>Override</div>
             <div className='flex gap-1 flex-wrap my-2'>
@@ -182,8 +188,8 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
                     <span className='my-auto'>Online to Local</span>
                     <Radio
                         color='primary'
-                        disabled={!onlineMode} 
-                        checked={o2l_override==='o2l'}
+                        disabled={!onlineMode}
+                        checked={o2l_override === 'o2l'}
                         value='o2l'
                         onChange={overrideOnline2LocalRadioFunction}
                     />
@@ -193,29 +199,29 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
                     <Radio
                         color='primary'
                         disabled={!onlineMode}
-                        checked={l2o_override==='l2o'}
+                        checked={l2o_override === 'l2o'}
                         value='l2o'
                         onChange={overrideLocal2OnlineRadioFunction}
                     />
                 </div>
             </div>
-            <button 
+            <button
                 onClick={overrideButtonFunction}
                 className='bg-blue-600 text-sm -mt-2
                 text-white px-1  w-20 h-9 rounded-md border-0 
                 hover:bg-blue-500 outline-none'>Override</button>
         </div>
 
-    const mergeButtonZone = 
+    const mergeButtonZone =
         <div className='pt-6'>
             <div className='font-bold'>Merge</div>
             <div className='flex gap-1 flex-wrap my-2'>
                 <div className='mr-3 flex-shrink-0'>
                     <span className='my-auto'>Online to Local</span>
-                    <Radio 
+                    <Radio
                         color='primary'
                         disabled={!onlineMode}
-                        checked={o2l_merge==='o2l'}
+                        checked={o2l_merge === 'o2l'}
                         value='o2l'
                         onChange={mergeOnline2LocalRadioFunction}
                     />
@@ -225,23 +231,23 @@ const Setting = ({onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHan
                     <Radio
                         color='primary'
                         disabled={!onlineMode}
-                        checked={l2o_merge==='l2o'}
+                        checked={l2o_merge === 'l2o'}
                         value='l2o'
                         onChange={mergeLocal2OnlineRadioFunction}
                     />
                 </div>
             </div>
-            <button 
+            <button
                 onClick={mergeButtonFunction}
                 className='bg-blue-600 text-sm -mt-2
                 text-white px-1  w-20 h-9 rounded-md border-0 mb-7
                 hover:bg-blue-500 outline-none'>Merge</button>
-            <br className='hidden md:block'/>
+            <br className='hidden md:block' />
         </div>
 
     return (
         // <div className='absolute w-4/5 sm:w-4/6 md:w-4/7 h-6/7 mx-11 sm:mx-28 md:mx-36  lg:mx-48 xl:mx-60 my-16 bg-white z-50 shadow-md rounded-lg'>
-         <div className='absolute w-4/5 sm:w-4/6 md:w-4/7 h-auto md:h-4/5 mx-11 sm:mx-28 md:mx-36  lg:mx-48 xl:mx-60 my-3 lg:my-18 md:my-12 sm:my-8 bg-white z-50 shadow-md rounded-lg'>
+        <div className='absolute w-4/5 sm:w-4/6 md:w-4/7 h-auto md:h-4/5 mx-11 sm:mx-28 md:mx-36  lg:mx-48 xl:mx-60 my-3 lg:my-18 md:my-12 sm:my-8 bg-white z-50 shadow-md rounded-lg'>
             <div className='container md:px-20 xl:px-24 px-10 py-6 w-auto mx-px overflow-y-auto h-full'>
                 <h1 className='text-2xl py-2 mb-1 sm:w-4/5 w-full font-bold border-b-2'>Setting</h1>
                 <div className='flex flex-col pt-1 h-4/5 w-10/12'>

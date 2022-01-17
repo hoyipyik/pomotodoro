@@ -5,14 +5,16 @@ import Container from './containers/Container'
 import Setting from './components/Setting'
 import Backdrop from './tools/Backdrop'
 import { ContextApp } from './tools/Context'
+import Account from './components/Account'
 
 const App = () => {
   const [todoFlag, setTodoFlag] = useState(true)
-
-  const [onlineMode, setOnlineMode] = useState(true)
+  const [account, setAccount] = useState('')
+  const [onlineMode, setOnlineMode] = useState(false)
   const [pomoMode, setPomoMode] = useState(true)
   const [clockMode, setClockMode] = useState(false)
   const [settingPageFlag, setSettingPageFlag] = useState(false)
+  const [accountPageFlag, setAccountPageFlag] = useState(false)
   const [refresh, setRefresh] = useState(false)
   const [minSidebarFlag, setMinSidebarFlag] = useState(false)
 
@@ -54,12 +56,20 @@ const App = () => {
     setSettingPageFlag(value)
   }
 
+  const accountPageHandler = (value) => {
+    setAccountPageFlag(value)
+  }
+
   const refreshHandler = () => {
     setRefresh(!refresh)
   }
 
   const minSidebarHandler = (value) => {
     setMinSidebarFlag(value)
+  }
+
+  const accountHandler = (value) =>{
+    setAccount(value)
   }
 
   /**
@@ -81,12 +91,17 @@ const App = () => {
     }
   }
 
-  const contextPassingValue = { minSidebarHandler, todoFlag }
+  const contextPassingValue = { minSidebarHandler, todoFlag, account, accountHandler }
   // console.log(onlineMode, 'render app')
 
   return (
     <div>
       <ContextApp.Provider value={contextPassingValue}>
+        {accountPageFlag ?
+          <div className='flex'>
+            <Account modeChangeHandler={modeChangeHandler}/>
+            <div onClick={() => accountPageHandler(false)}><Backdrop /></div>
+          </div> : null}
         {settingPageFlag ?
           <div className='flex'>
             <Setting
@@ -101,6 +116,7 @@ const App = () => {
             <div onClick={() => minSidebarHandler(false)}><Backdrop z={20} /></div>
             <div className='h-screen'>
               <Sidebar
+                accountPageHandler={accountPageHandler}
                 todoFlagHandler={todoFlagHandler}
                 settingPageHandler={settingPageHandler}
                 refreshHandler={refreshHandler} />
@@ -110,6 +126,7 @@ const App = () => {
         <div className='flex flex-row min-h-fit'>
           <div className='select-none bg-gray-100 lg:block hidden md:basis-1/5 h-screen overflow-auto'>
             <Sidebar
+              accountPageHandler={accountPageHandler}
               todoFlagHandler={todoFlagHandler}
               settingPageHandler={settingPageHandler}
               refreshHandler={refreshHandler} />

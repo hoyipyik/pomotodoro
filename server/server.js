@@ -12,11 +12,79 @@ app.use(function (req, res, next) {
     next()
 })
 
-app.get('/todoData.json', (req, res) => {
+app.post('/login.json', (req, res) => {
+    const rawData = req.body
+    const { username, password } = rawData
+    const queryFactor = { username: username }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
-        let dbo = db.db('Ho_Yipyik')
+        let dbo = db.db('userInfo')
+        dbo.collection('account').find(queryFactor).toArray((err2, res2) => {
+            // console.log(res2)
+            if (res2[0].password === password) {
+                res.send({ msg: true })
+                console.log('login success')
+            } else {
+                res.send({ msg: false })
+                console.log('login fail')
+            }
+        })
+    })
+})
+
+app.post('/signup.json', (req, res) => {
+    const rawData = req.body
+    const { username, password } = rawData
+    const item = rawData
+    const queryFactor = { username: username }
+    const infoItem = { username: username, icon: 'default' }
+    const MongoClient = require('mongodb').MongoClient
+    MongoClient.connect(url, (err, db) => {
+        if (err) throw err
+        let dbo = db.db('userInfo')
+        dbo.collection('account').find(queryFactor).toArray((err1, resd) => {
+            if (err1) throw err1
+            console.log(resd)
+            if (resd[0]) {
+                res.send({ msg: false })
+                console.log('username used')
+            } else {
+                dbo.collection('account').insertOne(item, (err2, res2) => {
+                    if (err2) throw err2
+                    console.log(res2, 'username added')
+                    dbo.collection('info').insertOne(infoItem, (err3, res3) => {
+                        if (err3) throw err3
+                        console.log(res3, 'user info added')
+                        console.log('signup success')
+                        res.send({ msg: true })
+                    })
+                })
+                const MongoClient2 = require('mongodb').MongoClient
+                MongoClient2.connect(url + username, (err3, db2) => {
+                    if (err3) throw err3
+                    let dbo2 = db2.db(username)
+                    dbo2.createCollection('todoData', (err4, res4) => {
+                        if (err4) throw err4
+                        console.log('new db create todoData colection')
+                        dbo2.createCollection('scheduleData', (err5, res5) => {
+                            if (err5) throw err5
+                            console.log('new db create scheduleData collection')
+                        })
+                    })
+                })
+            }
+        })
+    })
+})
+
+app.post('/todoData.json', (req, res) => {
+    const { account } = req.body
+    console.log(account, '/./././.....//./././')
+    const MongoClient = require('mongodb').MongoClient
+    MongoClient.connect(url, (err, db) => {
+        if (err) throw err
+        let dbo = db.db(account)
         dbo.collection('todoData').find().toArray((err1, resd) => {
             if (err1) throw err1
             const data = [...resd]
@@ -28,11 +96,12 @@ app.get('/todoData.json', (req, res) => {
 
 })
 
-app.get('/scheduleData.json', (req, res) => {
+app.post('/scheduleData.json', (req, res) => {
+    const { account } = req.body
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
-        let dbo = db.db('Ho_Yipyik')
+        let dbo = db.db(account)
         dbo.collection('scheduleData').find().toArray((err1, resd) => {
             if (err1) throw err1
             const data = [...resd]
@@ -45,12 +114,12 @@ app.get('/scheduleData.json', (req, res) => {
 
 app.post('/itemDelete.json', (req, res) => {
     const rawData = req.body
-    const { id } = rawData
+    const { id, account } = rawData
     const queryFactor = { id: id }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
-        let dbo = db.db('Ho_Yipyik')
+        let dbo = db.db(account)
         dbo.collection('todoData').deleteOne(queryFactor, (err1, res1) => {
             if (err1) throw err1
             dbo.collection('scheduleData').deleteOne(queryFactor, (err2, res2) => {
@@ -65,12 +134,12 @@ app.post('/itemDelete.json', (req, res) => {
 
 app.post('/chainDelete.json', (req, res) => {
     const rawData = req.body
-    const { id } = rawData
+    const { id, account } = rawData
     const queryFactor = { id: id }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
-        let dbo = db.db('Ho_Yipyik')
+        let dbo = db.db(account)
         dbo.collection('todoData').deleteOne(queryFactor, (err1, res1) => {
             if (err1) throw err1
             console.log("chain delete todo success")
@@ -82,12 +151,12 @@ app.post('/chainDelete.json', (req, res) => {
 
 app.post('/itemAdd.json', (req, res) => {
     const rawData = req.body
-    const { item, type } = rawData
+    const { item, type, account } = rawData
     const collectionName = type ? 'todoData' : 'scheduleData'
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
-        let dbo = db.db('Ho_Yipyik')
+        let dbo = db.db(account)
         dbo.collection(collectionName).insertOne(item, (err1, res1) => {
             if (err1) throw err1
             console.log('insert successfully')
@@ -99,13 +168,13 @@ app.post('/itemAdd.json', (req, res) => {
 
 app.post('/attributeChange.json', (req, res) => {
     const rawData = req.body
-    const { id, name, value, type, chain } = rawData
+    const { id, name, value, type, chain, account } = rawData
     const queryFactor = { id: id }
     const collectionName = type ? 'todoData' : 'scheduleData'
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
-        let dbo = db.db('Ho_Yipyik')
+        let dbo = db.db(account)
         dbo.collection(collectionName).find(queryFactor).toArray((err1, res1) => {
             if (err1) throw err1
             let oldItem = res1[0]
@@ -128,7 +197,7 @@ app.post('/attributeChange.json', (req, res) => {
 
 app.post('/merge_schedule.json', (req, res) => {
     const rawData = req.body
-    const schedule = rawData
+    const { schedule, account } = rawData
     const MongoClient2 = require('mongodb').MongoClient
     MongoClient2.connect(url, (err, db) => {
         if (err) throw err
@@ -160,12 +229,12 @@ app.post('/merge_schedule.json', (req, res) => {
 
 app.post('/merge_todo.json', (req, res) => {
     const rawData = req.body
-    const todo = rawData
+    const { todo, account } = rawData
     // console.log(rawData)
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
-        let dbo = db.db('Ho_Yipyik')
+        let dbo = db.db(account)
         dbo.collection('todoData').drop((err1, res1) => {
             if (err1) throw err1
             console.log('drop todo')
