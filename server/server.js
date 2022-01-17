@@ -80,7 +80,6 @@ app.post('/signup.json', (req, res) => {
 
 app.post('/todoData.json', (req, res) => {
     const { account } = req.body
-    console.log(account, '/./././.....//./././')
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
