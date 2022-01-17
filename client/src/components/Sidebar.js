@@ -6,7 +6,8 @@ import { ContextApp } from '../tools/Context'
 const Sidebar = ({ settingPageHandler, refreshHandler,
     todoFlagHandler, accountPageHandler }) => {
 
-    const { minSidebarHandler, account } = useContext(ContextApp)
+    const { minSidebarHandler, account, accountInfo } = useContext(ContextApp)
+    const {username, name, icon} = accountInfo
 
     return (
         <div className='h-full box-border relative z-20 bg-gray-100'>
@@ -17,7 +18,7 @@ const Sidebar = ({ settingPageHandler, refreshHandler,
                 onClick={() => accountPageHandler(true)}
                 className='hover:cursor-pointer flex flex-col relative h-1/4 m-12 w-auto border-2'>
                 <AccountCircleIcon className='block mt-1 aspect-auto h-2/3 w-2/3 mx-auto justify-items-center rounded-lg' style={{ zoom: 3 }} />
-                <p className='p-4 mx-auto justify-items-center'>{account}</p>
+                <p className='p-4 mx-auto justify-items-center'>{account ? name : 'Account'}</p>
             </div>
             <div className='container flex flex-col relative top-6 m-5 w-auto h-2/7'>
                 <div

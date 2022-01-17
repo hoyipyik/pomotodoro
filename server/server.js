@@ -12,6 +12,27 @@ app.use(function (req, res, next) {
     next()
 })
 
+app.post('/info.json', (req, res) => {
+    const rawData = req.body
+    const { account } = rawData
+    const queryFactor = { username: account }
+    const MongoClient = require('mongodb').MongoClient
+    MongoClient.connect(url, (err, db) => {
+        if (err) throw err
+        let dbo = db.db('userInfo')
+        console.log(queryFactor)
+        dbo.collection('info').find(queryFactor).toArray((err1, res1) => {
+            if (err1) throw err1
+            const backData = res1[0]
+            console.log(res1)
+            res.send(backData)
+            db.close()
+            console.log('info send')
+        })
+
+    })
+})
+
 app.post('/login.json', (req, res) => {
     const rawData = req.body
     const { username, password } = rawData
@@ -27,6 +48,7 @@ app.post('/login.json', (req, res) => {
                 console.log('login success')
             } else {
                 res.send({ msg: false })
+                db.close()
                 console.log('login fail')
             }
         })
@@ -38,7 +60,7 @@ app.post('/signup.json', (req, res) => {
     const { username, password } = rawData
     const item = rawData
     const queryFactor = { username: username }
-    const infoItem = { username: username, icon: 'default' }
+    const infoItem = { username: username, icon: 'default', name: username }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
@@ -57,19 +79,20 @@ app.post('/signup.json', (req, res) => {
                         if (err3) throw err3
                         console.log(res3, 'user info added')
                         console.log('signup success')
-                        res.send({ msg: true })
-                    })
-                })
-                const MongoClient2 = require('mongodb').MongoClient
-                MongoClient2.connect(url + username, (err3, db2) => {
-                    if (err3) throw err3
-                    let dbo2 = db2.db(username)
-                    dbo2.createCollection('todoData', (err4, res4) => {
-                        if (err4) throw err4
-                        console.log('new db create todoData colection')
-                        dbo2.createCollection('scheduleData', (err5, res5) => {
-                            if (err5) throw err5
-                            console.log('new db create scheduleData collection')
+                        const MongoClient2 = require('mongodb').MongoClient
+                        MongoClient2.connect(url + username, (err3, db2) => {
+                            if (err3) throw err3
+                            let dbo2 = db2.db(username)
+                            dbo2.createCollection('todoData', (err4, res4) => {
+                                if (err4) throw err4
+                                console.log('new db create todoData colection')
+                                dbo2.createCollection('scheduleData', (err5, res5) => {
+                                    if (err5) throw err5
+                                    res.send({ msg: true })
+                                    db.close()
+                                    console.log('new db create scheduleData collection')
+                                })
+                            })
                         })
                     })
                 })

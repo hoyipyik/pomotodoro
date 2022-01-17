@@ -10,6 +10,8 @@ import Account from './components/Account'
 const App = () => {
   const [todoFlag, setTodoFlag] = useState(true)
   const [account, setAccount] = useState('')
+  const [keepMode, setKeepMode] = useState(true)
+  const [accountInfo, setAccountInfo] = useState({})
   const [onlineMode, setOnlineMode] = useState(false)
   const [pomoMode, setPomoMode] = useState(true)
   const [clockMode, setClockMode] = useState(false)
@@ -25,14 +27,16 @@ const App = () => {
   useEffect(() => {
     const modeFlag = JSON.parse(localStorage.getItem('modeFlag'))
     if (modeFlag) {
-      const { online, pomo, clock } = modeFlag
+      const { online, pomo, clock, keep } = modeFlag
       // setOnlineMode(online)
       setPomoMode(pomo)
       setClockMode(clock)
+      setKeepMode(keep)
     } else {
       setOnlineMode(true)
       setPomoMode(true)
       setClockMode(false)
+      setKeepMode(true)
     }
     return
   }, [])
@@ -41,10 +45,11 @@ const App = () => {
     // const online = onlineMode
     const pomo = pomoMode
     const clock = clockMode
-    const modeFlag = { pomo, clock }
+    const keep = keepMode
+    const modeFlag = { pomo, clock, keep }
     localStorage.setItem('modeFlag', JSON.stringify(modeFlag))
     return
-  }, [pomoMode, clockMode])
+  }, [pomoMode, clockMode, keepMode])
 
   // flag control
 
@@ -68,8 +73,12 @@ const App = () => {
     setMinSidebarFlag(value)
   }
 
-  const accountHandler = (value) =>{
+  const accountHandler = (value) => {
     setAccount(value)
+  }
+
+  const accountInfoHandler = (value) => {
+    setAccountInfo(value)
   }
 
   /**
@@ -86,12 +95,19 @@ const App = () => {
         break;
       case 'clockMode':
         setClockMode(value)
+        break;
+      case 'keepMode':
+        setKeepMode(value)
+        break;
       default:
         break;
     }
   }
 
-  const contextPassingValue = { minSidebarHandler, todoFlag, account, accountHandler }
+  const contextPassingValue = {
+    minSidebarHandler, todoFlag, account,
+    accountHandler, accountInfo, accountInfoHandler
+  }
   // console.log(onlineMode, 'render app')
 
   return (
@@ -99,7 +115,7 @@ const App = () => {
       <ContextApp.Provider value={contextPassingValue}>
         {accountPageFlag ?
           <div className='flex'>
-            <Account modeChangeHandler={modeChangeHandler}/>
+            <Account modeChangeHandler={modeChangeHandler} keepMode={keepMode}/>
             <div onClick={() => accountPageHandler(false)}><Backdrop /></div>
           </div> : null}
         {settingPageFlag ?

@@ -2,19 +2,35 @@ import React, { useContext, useState, useEffect, createRef } from 'react'
 import axios from '../axios'
 import testImg from '../images/user.png'
 import { ContextApp } from '../tools/Context'
+import Switch from '../tools/Switch'
 
-const Account = ({ modeChangeHandler }) => {
+const Account = ({ modeChangeHandler, keepMode }) => {
 
     const [signed, setSigned] = useState(false)
     const [usernameHolder, setUsernameHolder] = useState('')
     const [passwordHolder, setPasswordHolder] = useState('')
 
-    const { account, accountHandler } = useContext(ContextApp)
+    const { account, accountHandler, accountInfo, accountInfoHandler } = useContext(ContextApp)
+    const { username, name, icon } = accountInfo
 
     const blue = { color: '#155fd8' }
 
     const ref1 = createRef()
     const ref2 = createRef()
+
+    useEffect(() => {
+        if (account) {
+            const pack = { account: account }
+            axios.post('/info.json', pack)
+                .then(res => {
+                    const info = res.data
+                    accountInfoHandler(info)
+                    console.log('account info load', info)
+                })
+                .catch(err => console.log(err))
+            return
+        }
+    }, [account])
 
     useEffect(() => {
         const flag = JSON.parse(localStorage.getItem('signed'))
@@ -97,16 +113,37 @@ const Account = ({ modeChangeHandler }) => {
         }
     }
 
+    const logOutFunction = () => {
+        accountHandler('')
+        accountInfoHandler({})
+    }
+
     const accountContents =
         <div className='basis-2/3 flex-wrap py-4'>
-            <div className='mb-4'>
+            <div className='mb-2'>
                 <h3 className='text-lg font-semibold mb-2 '>Name</h3>
-                <div style={blue}>Ho Yipyik</div>
+                <div className='text-lg' style={blue}>{name}</div>
             </div>
 
-            <div>
+            {/* <div className='mb-2'>
+                <h3 className='text-lg font-semibold mb-2 '>Keep Login</h3>
+                <Switch className='-mx-3' color='primary' checked={keepMode} />
+            </div> */}
+
+            {/* <div>
                 <h3 className='text-lg font-semibold'>Icon</h3>
                 <img className='aspect-square w-1/4 h-auto' src={testImg} />
+            </div> */}
+
+            <div>
+                <h3 className='text-lg font-semibold'>Actions</h3>
+                <button
+                    onClick={logOutFunction}
+                    className='bg-blue-600 text-sm mt-2
+                    text-white px-1  w-16 h-9 rounded-md border-0
+                    hover:bg-blue-500 outline-none'>
+                    Logout
+                </button>
             </div>
         </div>
 
