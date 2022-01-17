@@ -186,10 +186,13 @@ const Container = ({ pomoMode, clockMode, onlineMode,
 
     const suddenOfflineHandler = (type) => {
         const onlineTodo = todoData
-        const tag = type === 'todo' ? 'localTodoData' : 'localScheduleData'
-        const localTodo = JSON.parse(localStorage.getItem(tag))
-        const newData = [...localTodo, ...onlineTodo]
-        localStorage.setItem(tag, JSON.stringify(newData))
+        const onlineSchedule = scheduleData
+        const localTodo = JSON.parse(localStorage.getItem('localTodoData'))
+        const localSchedule = JSON.parse(localStorage.getItem('localScheduleData'))
+        const newTodoData = [...localTodo, ...onlineTodo]
+        const newScheduleData = [...localSchedule, ...onlineSchedule]
+        localStorage.setItem('localTodoData', JSON.stringify(newTodoData))
+        localStorage.setItem('localScheduleData', JSON.stringify(newScheduleData))
     }
 
     /**
