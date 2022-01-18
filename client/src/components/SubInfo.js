@@ -218,7 +218,7 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
                 {head}
                 <div className={clockClassName}>
                     <div className={mobileDetailsClassName}>{details}</div>
-                    {clockMode ? <div className={mobileClockClassName}>{pomodoro}</div> : null}
+                    {(clockMode && todoFlag) ? <div className={mobileClockClassName}>{pomodoro}</div> : null}
                 </div>
             </div>
 
