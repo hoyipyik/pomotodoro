@@ -80,6 +80,9 @@ const PomoClock = ({ attributeChangeFunction, pomoTimes }) => {
 
     const skipRestFunction = (value) => {
         setSkipFlag(value)
+        if (current % 2 !== 0) {
+            setTime(25 * 60)
+        }
     }
 
     const startButton = () => {
