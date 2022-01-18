@@ -4,7 +4,7 @@ const url = 'mongodb://localhost:27017/'
 
 app.use(express.json())
 
-app.set('port', process.env.PORT || 4000)
+app.set('port', process.env.PORT || 3000)
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
