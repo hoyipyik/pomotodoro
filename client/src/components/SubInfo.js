@@ -7,6 +7,8 @@ import Switch from '../tools/Switch'
 import Slider from '../tools/Slider'
 import { Context } from '../tools/Context'
 import { ContextApp } from '../tools/Context'
+import PomoClock from './PomoClock'
+import TimerIcon from '@material-ui/icons/Timer'
 
 const SubInfo = ({ infoSpace, infoPageHandler }) => {
     const { id, taskName, checked, priority, pomoTimes,
@@ -16,9 +18,14 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
     const { todoFlag } = useContext(ContextApp)
 
     const [inputHolder, setInputHolder] = useState('')
+    const [mobileClockFlag, setMobileClockFlag] = useState(false)
+
     const ref = useRef()
 
     const tag = `Pomodoro Times  ${pomoTimes}`
+
+    const blue = { fill: '#155fd8' }
+    const gray = { fill: '#7b8088' }
 
     useEffect(() => {
         const listener = (event) => {
@@ -34,7 +41,7 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
         return () => {
             document.removeEventListener('keydown', listener)
         }
-    }, )
+    })
 
     const inputSubTaskFunction = (e) => {
         const { value } = e.target
@@ -131,7 +138,7 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
         </div>
 
     const details =
-        <div className='col-span-2'>
+        <div >
             <div className='flex select-none'>
                 <div className='basis-2/7 my-auto'>
                     <span>Check</span>
@@ -140,13 +147,20 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
                         onClick={() => attributeChangeFunction('checked', !checked)}
                     />
                 </div>
-                <div className='basis3/7 my-auto mx-4'>
+                <div className='basis-1/7 my-auto mx-4'>
                     <span >Priority</span>
                     <Switch
                         color='primary'
                         checked={priority}
                         onChange={() => attributeChangeFunction('priority', !priority)}
                     />
+                </div>
+                <div className='basis-3/7 my-auto mx-4 md:hidden block'>
+                    <span >PomoClock</span>
+                    <TimerIcon
+                        onClick={()=>setMobileClockFlag(true)}
+                        className='h-full mx-2 relative bottom-px hover:cursor-pointer'
+                        style={pomoTimes === 0 ? gray : blue} />
                 </div>
                 {todoFlag ? null :
                     <div className='basis3/7 my-auto mx-4'>
@@ -192,18 +206,19 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
 
     const pomodoro =
         <div className='select-none'>
-            Pomodoro
+            <PomoClock pomoTimes={pomoTimes} attributeChangeFunction={attributeChangeFunction} />
         </div>
 
     const clockClassName = clockMode ? 'grid grid-cols-3 container my-4' : 'grid grid-cols-2 container my-4'
-
+    const mobileClockClassName = mobileClockFlag ? 'block md:col-span-1 sm:col-span-2 col-span-3' : 'md:block hidden'
+    const mobileDetailsClassName = mobileClockFlag ? 'hidden' : 'md:col-span-2 col-span-3'
     return (
         <div className='absolute z-50 bg-white mx-auto lg:w-8/12 w-5/6 h-5/6 my-8 rounded-xl shadow-md'>
             <div className='container mx-5 my-4 p-4 w-auto'>
                 {head}
                 <div className={clockClassName}>
-                    {details}
-                    {clockMode ? <div>{pomodoro}</div> : null}
+                    <div className={mobileDetailsClassName}>{details}</div>
+                    {clockMode ? <div className={mobileClockClassName}>{pomodoro}</div> : null}
                 </div>
             </div>
 
