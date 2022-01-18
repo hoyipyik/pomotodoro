@@ -247,7 +247,7 @@ const Setting = ({ onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHa
 
     return (
         // <div className='absolute w-4/5 sm:w-4/6 md:w-4/7 h-6/7 mx-11 sm:mx-28 md:mx-36  lg:mx-48 xl:mx-60 my-16 bg-white z-50 shadow-md rounded-lg'>
-        <div className='absolute w-4/5 sm:w-4/6 md:w-4/7 h-auto md:h-4/5 mx-11 sm:mx-28 md:mx-36  lg:mx-48 xl:mx-60 my-3 lg:my-18 md:my-12 sm:my-8 bg-white z-50 shadow-md rounded-lg'>
+        <div className='absolute w-4/5 sm:w-4/6 md:w-4/7 h-auto md:h-4/5 mx-11 sm:mx-28 md:mx-36  lg:mx-48 xl:mx-60 my-3 lg:my-18 md:my-12 sm:my-8 bg-white z-50 shadow-md rounded-lg select-none'>
             <div className='container md:px-20 xl:px-24 px-10 py-6 w-auto mx-px overflow-y-auto h-full'>
                 <h1 className='text-2xl py-2 mb-1 sm:w-4/5 w-full font-bold border-b-2'>Setting</h1>
                 <div className='flex flex-col pt-1 h-4/5 w-10/12'>

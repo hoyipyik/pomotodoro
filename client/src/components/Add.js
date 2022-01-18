@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect, createRef} from 'react'
+import React, {useState, useContext, useEffect, useRef} from 'react'
 import MenuIcon from '@material-ui/icons/Menu'
 import { Context } from '../tools/Context'
 import { ContextApp } from '../tools/Context'
@@ -9,7 +9,7 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
 
     const {itemAddHandler, modeChangeHandler} = useContext(Context)
     const {minSidebarHandler, todoFlag, account} = useContext(ContextApp)
-    const ref = createRef()
+    const ref = useRef()
 
     useEffect(()=>{
         const listener = (event) =>{
@@ -22,6 +22,7 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
                     buttonFunction()
                     // console.log('enter')
                     event.preventDefault()
+                    ref.current.focus()
                 }     
         }
 

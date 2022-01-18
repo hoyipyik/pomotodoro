@@ -153,7 +153,7 @@ const App = () => {
       <ContextApp.Provider value={contextPassingValue}>
         {accountPageFlag ?
           <div className='flex'>
-            <Account modeChangeHandler={modeChangeHandler} keepMode={keepMode} />
+            <Account modeChangeHandler={modeChangeHandler} keepMode={keepMode} accountPageHandler={accountPageHandler}/>
             <div onClick={() => accountPageHandler(false)}><Backdrop /></div>
           </div> : null}
         {settingPageFlag ?

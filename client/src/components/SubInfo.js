@@ -1,4 +1,4 @@
-import React, { useContext, useState, createRef, useEffect } from 'react'
+import React, { useContext, useState, useRef, useEffect } from 'react'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import SubItem from './SubItem'
@@ -16,7 +16,7 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
     const { todoFlag } = useContext(ContextApp)
 
     const [inputHolder, setInputHolder] = useState('')
-    const ref = createRef()
+    const ref = useRef()
 
     const tag = `Pomodoro Times  ${pomoTimes}`
 

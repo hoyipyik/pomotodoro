@@ -1,22 +1,23 @@
-import React, { useContext, useState, useEffect, createRef } from 'react'
+import React, { useContext, useState, useEffect, useRef } from 'react'
 import axios from '../axios'
 import testImg from '../images/user.png'
 import { ContextApp } from '../tools/Context'
 import Switch from '../tools/Switch'
 
-const Account = ({ modeChangeHandler, keepMode }) => {
+const Account = ({ modeChangeHandler, keepMode, accountPageHandler }) => {
 
     const [signed, setSigned] = useState(false)
     const [usernameHolder, setUsernameHolder] = useState('')
     const [passwordHolder, setPasswordHolder] = useState('')
+    const [deleteConfirmFlag, setDeleteConfirmFlag] = useState(false)
 
     const { account, accountHandler, accountInfo, accountInfoHandler } = useContext(ContextApp)
     const { username, name, icon } = accountInfo
 
     const blue = { color: '#155fd8' }
 
-    const ref1 = createRef()
-    const ref2 = createRef()
+    const ref1 = useRef()
+    const ref2 = useRef()
 
     useEffect(() => {
         if (account) {
@@ -46,7 +47,10 @@ const Account = ({ modeChangeHandler, keepMode }) => {
             if (activeElement === ref2.current || activeElement === ref1.current) {
                 if (e.code === 'Enter' || e.code === 'NumpadEnter') {
                     console.log('listener')
-                    submitButton()
+                    if (!deleteConfirmFlag)
+                        submitButton()
+                    else 
+                        deleteConfirmHandler()
                 }
             }
         }
@@ -94,6 +98,7 @@ const Account = ({ modeChangeHandler, keepMode }) => {
                         } else {
                             setSigned(true)
                             console.log('signup success')
+                            ref1.current.focus()
                             localStorage.setItem('signed', JSON.stringify(true))
                         }
                         setUsernameHolder('')
@@ -125,8 +130,33 @@ const Account = ({ modeChangeHandler, keepMode }) => {
         localStorage.setItem('accountInfo', JSON.stringify({}))
     }
 
+    const deleteAccountFunction = () => {
+        setDeleteConfirmFlag(true)
+    }
+
+    const deleteConfirmHandler = () => {
+        const username = usernameHolder
+        const password = passwordHolder
+        const pack = { username, password }
+        axios.post('/deleteAccount.json', pack)
+            .then(res => {
+                const backFlag = res.data.msg
+                if (backFlag) {
+                    console.log('account delete success')
+                    logOutFunction()
+                    accountPageHandler(false)
+                } else {
+                    window.alert('password or username false')
+                    console.log('account delete fail')
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
+    const accountContentsClassName = deleteConfirmFlag ? 'basis-2/3 flex-wrap py-4 lg:block hidden' : 'basis-2/3 flex-wrap py-4'
+
     const accountContents =
-        <div className='basis-2/3 flex-wrap py-4'>
+        <div className={accountContentsClassName}>
             <div className='mb-2'>
                 <h3 className='text-lg font-semibold mb-2 '>Name</h3>
                 <div className='text-lg' style={blue}>{name}</div>
@@ -150,6 +180,17 @@ const Account = ({ modeChangeHandler, keepMode }) => {
                     text-white px-1  w-16 h-9 rounded-md border-0
                     hover:bg-blue-500 outline-none'>
                     Logout
+                </button>
+            </div>
+
+            <div>
+                <h3 className=' mt-4'>Delete Account</h3>
+                <button
+                    onClick={deleteAccountFunction}
+                    className='bg-blue-600 text-sm mt-2
+                    text-white px-1  w-16 h-9 rounded-md border-0
+                    hover:bg-blue-500 outline-none'>
+                    Delete
                 </button>
             </div>
         </div>
@@ -178,7 +219,7 @@ const Account = ({ modeChangeHandler, keepMode }) => {
                 hover:bg-blue-500 outline-none'
                 onClick={submitButton}
             >
-                <span className=' text-sm'>Sign in</span>
+                <span className=' text-sm'>Sign up</span>
             </button>
             <div className='relative top-10 text-sm'>
                 <span className=' hover:cursor-pointer' onClick={() => signedHandler(false)} style={blue}>Signup</span>
@@ -228,12 +269,43 @@ const Account = ({ modeChangeHandler, keepMode }) => {
             }
         </div>
 
+    const deleteLog =
+        <div className='flex flex-col flex-shrink-0 basis-1/3'>
+            <h3 className='text-lg font-semibold mb-2'>Delete Confirm</h3>
+            <h4 className='font-semibold'>username</h4>
+            <input
+                ref={ref1}
+                value={usernameHolder}
+                className='my-1 p-1 border-2 w-full border-gray-400 focus:border-gray-500 outline-none rounded block'
+                onChange={usernameHandler}
+            />
+            <h4 className='font-semibold'>password</h4>
+            <input
+                ref={ref2}
+                type='password'
+                value={passwordHolder}
+                className='my-1 p-1 border-2 border-gray-400 focus:border-gray-500 outline-none rounded block'
+                onChange={passwordHandler}
+            />
+            <button
+                className='bg-blue-600 text-sm  mt-2
+                text-white px-1  w-16 h-8 rounded-md border-0 mb-7
+                hover:bg-blue-500 outline-none'
+                onClick={deleteConfirmHandler}
+            >
+                <span className=' text-sm'>Confirm</span>
+            </button>
+        </div>
+
     return (
-        <div className='absolute w-4/5 sm:w-4/6 md:w-4/7 h-4/5 mx-11 sm:mx-28 md:mx-36  lg:mx-48 xl:mx-60 my-14 bg-white z-50 shadow-md rounded-lg'>
+        <div className='absolute w-4/5 sm:w-4/6 md:w-4/7 h-4/5 mx-11 sm:mx-28 md:mx-36  lg:mx-48 xl:mx-60 my-14 bg-white z-50 shadow-md rounded-lg select-none'>
             <div className='container md:px-20 xl:px-24 px-10 py-6 w-auto mx-px overflow-y-auto h-full'>
                 <h1 className='text-2xl py-2 mb-1 sm:w-4/5 w-full font-bold border-b-2'>Account</h1>
-                <div >
-                    {account !== '' ? <div className='flex flex-row pt-1 h-4/5 w-full'>{accountContents}</div>
+                <div className='flex flex-shrink-0'>
+                    {account ? <div className='flex flex-row pt-1 h-4/5 w-full flex-shrink-0'>{accountContents}
+                        {deleteConfirmFlag ? <div className='flex flex-shrink-0'>{deleteLog}</div> : null
+                        }
+                    </div>
                         : <div className='flex flex-row pt-1 h-4/5 w-full'>{logUI}</div>}
                 </div>
             </div>

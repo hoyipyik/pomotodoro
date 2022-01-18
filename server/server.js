@@ -12,6 +12,45 @@ app.use(function (req, res, next) {
     next()
 })
 
+app.post('/deleteAccount.json', (req, res) => {
+    const rawData = req.body
+    const { username, password } = rawData
+    const user = username.replaceAll(' ', '_')
+    const queryFactor = { username: user }
+    const MongoClient = require('mongodb').MongoClient
+    MongoClient.connect(url, (err, db) => {
+        if (err) throw err
+        let dbo = db.db('userInfo')
+        dbo.collection('account').find(queryFactor).toArray((err1, res1) => {
+            if (err1) throw err1
+            if (res1[0])
+                if (res1[0].password === password) {
+                    console.log('password match')
+                    dbo.collection('account').deleteOne(queryFactor, (err2, res2) => {
+                        if (err2) throw err2
+                        console.log('delete from account list')
+                        dbo.collection('info').deleteOne(queryFactor, (err3, res3) => {
+                            if (err3) throw err3
+                            console.log('delete from info')
+                            db.close()
+                            const MongoClient2 = require('mongodb').MongoClient
+                            MongoClient2.connect(url + user, (err4, db2) => {
+                                if (err4) throw err4
+                                let dbo2 = db2.db(user)
+                                dbo2.dropDatabase((err5, res5) => {
+                                    if (err5) throw err5
+                                    res.send({ msg: true })
+                                    console.log('delete database associated with account')
+                                })
+                            })
+                        })
+                    })
+                }
+        })
+    })
+
+})
+
 app.post('/info.json', (req, res) => {
     const rawData = req.body
     const { account } = rawData
@@ -47,9 +86,11 @@ app.post('/login.json', (req, res) => {
         let dbo = db.db('userInfo')
         dbo.collection('account').find(queryFactor).toArray((err2, res2) => {
             // console.log(res2)
-            if (res2[0].password === password) {
-                res.send({ msg: true })
-                console.log('login success')
+            if (res2[0]) {
+                if (res2[0].password === password) {
+                    res.send({ msg: true })
+                    console.log('login success')
+                }
             } else {
                 res.send({ msg: false })
                 db.close()
@@ -63,7 +104,7 @@ app.post('/signup.json', (req, res) => {
     const rawData = req.body
     const { username, password } = rawData
     user = username.replaceAll(' ', '_')
-    const item = {username: user, password}
+    const item = { username: user, password }
     const queryFactor = { username: user }
     const infoItem = { username: user, icon: 'default', name: username }
     const MongoClient = require('mongodb').MongoClient
