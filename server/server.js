@@ -15,12 +15,14 @@ app.use(function (req, res, next) {
 app.post('/info.json', (req, res) => {
     const rawData = req.body
     const { account } = rawData
-    const queryFactor = { username: account }
+    const user = account.replaceAll(' ', '_')
+    console.log(user)
+    const queryFactor = { username: user }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
         let dbo = db.db('userInfo')
-        console.log(queryFactor)
+        // console.log(queryFactor)
         dbo.collection('info').find(queryFactor).toArray((err1, res1) => {
             if (err1) throw err1
             const backData = res1[0]
@@ -35,8 +37,10 @@ app.post('/info.json', (req, res) => {
 
 app.post('/login.json', (req, res) => {
     const rawData = req.body
+    // console.log(rawData)
     const { username, password } = rawData
-    const queryFactor = { username: username }
+    const user = username.replaceAll(' ', '_')
+    const queryFactor = { username: user }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
@@ -58,9 +62,10 @@ app.post('/login.json', (req, res) => {
 app.post('/signup.json', (req, res) => {
     const rawData = req.body
     const { username, password } = rawData
-    const item = rawData
-    const queryFactor = { username: username }
-    const infoItem = { username: username, icon: 'default', name: username }
+    user = username.replaceAll(' ', '_')
+    const item = {username: user, password}
+    const queryFactor = { username: user }
+    const infoItem = { username: user, icon: 'default', name: username }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
@@ -80,9 +85,9 @@ app.post('/signup.json', (req, res) => {
                         console.log(res3, 'user info added')
                         console.log('signup success')
                         const MongoClient2 = require('mongodb').MongoClient
-                        MongoClient2.connect(url + username, (err3, db2) => {
+                        MongoClient2.connect(url + user, (err3, db2) => {
                             if (err3) throw err3
-                            let dbo2 = db2.db(username)
+                            let dbo2 = db2.db(user)
                             dbo2.createCollection('todoData', (err4, res4) => {
                                 if (err4) throw err4
                                 console.log('new db create todoData colection')

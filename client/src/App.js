@@ -20,6 +20,37 @@ const App = () => {
   const [refresh, setRefresh] = useState(false)
   const [minSidebarFlag, setMinSidebarFlag] = useState(false)
 
+  // useEffect(()=>{
+  //   if(keepMode){
+  // localStorage.setItem('account', JSON.stringify(account))
+  // localStorage.setItem('accountInfo', JSON.stringify(accountInfo))
+  //   }else{
+  //     localStorage.setItem('account', JSON.stringify(''))
+  //     localStorage.setItem('accountInfo', JSON.stringify({}))
+  //   }
+  //   return
+  // }, [keepMode, account, accountInfo])
+
+  useEffect(() => {
+    const modeFlag = JSON.parse(localStorage.getItem('modeFlag'))
+    let keep = false
+    if (modeFlag) {
+      keep = modeFlag.keep
+      setKeepMode(keep)
+    } else {
+      setKeepMode(true)
+    }
+    if (keep) {
+      console.log('keep works')
+      const accountData = JSON.parse(localStorage.getItem('account'))
+      const accountInfoData = JSON.parse(localStorage.getItem('accountInfo'))
+      setAccount(accountData)
+      setAccountInfo(accountInfoData)
+      setOnlineMode(true)
+    }
+    return
+  }, [])
+
   /**
    * mode flag set and load to/from localStorage
    */
@@ -98,6 +129,13 @@ const App = () => {
         break;
       case 'keepMode':
         setKeepMode(value)
+        if (!value) {
+          localStorage.setItem('account', JSON.stringify(''))
+          localStorage.setItem('accountInfo', JSON.stringify({}))
+        } else {
+          localStorage.setItem('account', JSON.stringify(account))
+          localStorage.setItem('accountInfo', JSON.stringify(accountInfo))
+        }
         break;
       default:
         break;
@@ -115,7 +153,7 @@ const App = () => {
       <ContextApp.Provider value={contextPassingValue}>
         {accountPageFlag ?
           <div className='flex'>
-            <Account modeChangeHandler={modeChangeHandler} keepMode={keepMode}/>
+            <Account modeChangeHandler={modeChangeHandler} keepMode={keepMode} />
             <div onClick={() => accountPageHandler(false)}><Backdrop /></div>
           </div> : null}
         {settingPageFlag ?

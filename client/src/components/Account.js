@@ -25,6 +25,8 @@ const Account = ({ modeChangeHandler, keepMode }) => {
                 .then(res => {
                     const info = res.data
                     accountInfoHandler(info)
+                    if (keepMode)
+                        localStorage.setItem('accountInfo', JSON.stringify(info))
                     console.log('account info load', info)
                 })
                 .catch(err => console.log(err))
@@ -82,10 +84,12 @@ const Account = ({ modeChangeHandler, keepMode }) => {
                     const backFlag = res.data.msg
                     if (backFlag) {
                         if (type) {
-                            accountHandler(username)
+                            const user = username.replaceAll(' ', '_')
+                            accountHandler(user)
                             console.log('login success')
-                            accountHandler(username)
                             modeChangeHandler(true, 'onlineMode')
+                            if (keepMode)
+                                localStorage.setItem('account', JSON.stringify(user))
                             localStorage.setItem('signed', JSON.stringify(true))
                         } else {
                             setSigned(true)
@@ -116,6 +120,9 @@ const Account = ({ modeChangeHandler, keepMode }) => {
     const logOutFunction = () => {
         accountHandler('')
         accountInfoHandler({})
+        modeChangeHandler(false, 'onlineMode')
+        localStorage.setItem('account', JSON.stringify(''))
+        localStorage.setItem('accountInfo', JSON.stringify({}))
     }
 
     const accountContents =
@@ -125,10 +132,10 @@ const Account = ({ modeChangeHandler, keepMode }) => {
                 <div className='text-lg' style={blue}>{name}</div>
             </div>
 
-            {/* <div className='mb-2'>
+            <div className='mb-2'>
                 <h3 className='text-lg font-semibold mb-2 '>Keep Login</h3>
-                <Switch className='-mx-3' color='primary' checked={keepMode} />
-            </div> */}
+                <Switch className='-mx-3' color='primary' onClick={() => modeChangeHandler(!keepMode, 'keepMode')} checked={keepMode} />
+            </div>
 
             {/* <div>
                 <h3 className='text-lg font-semibold'>Icon</h3>
