@@ -82,6 +82,9 @@ const PomoClock = ({ attributeChangeFunction, pomoTimes }) => {
         setSkipFlag(value)
         if (current % 2 !== 0) {
             setTime(25 * 60)
+            setCurrent(current => current - 1)
+            if (current - 1 === 0)
+                setDoneFlag(true)
         }
     }
 
