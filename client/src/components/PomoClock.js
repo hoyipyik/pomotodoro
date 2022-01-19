@@ -25,6 +25,7 @@ const PomoClock = ({ attributeChangeFunction, pomoTimes }) => {
 
     useEffect(() => {
         setCurrent(2 * pomoTimes)
+        setIsActive(false)
         setTime(25 * 60)
         if (pomoTimes === 0) {
             setDoneFlag(true)
@@ -35,7 +36,7 @@ const PomoClock = ({ attributeChangeFunction, pomoTimes }) => {
     }, [pomoTimes])
 
     useEffect(() => {
-        console.log(time, 'time')
+        // console.log(time, 'time')
         let interval = null
         if (isActive) {
             interval = setInterval(() => {
@@ -115,7 +116,7 @@ const PomoClock = ({ attributeChangeFunction, pomoTimes }) => {
                 setTime(25 * 60)
             }
             setCurrent(nextCurrent)
-            console.log('works nextbutton')
+            // console.log('works nextbutton')
         } else {
             setCurrent(0)
             setDoneFlag(true)
@@ -126,7 +127,7 @@ const PomoClock = ({ attributeChangeFunction, pomoTimes }) => {
     const second = Math.floor(time % 60)
     const pomoLeft = Math.ceil(current / 2)
 
-    console.log(current)
+    // console.log(current)
 
     return (
         <div className='flex flex-col'>

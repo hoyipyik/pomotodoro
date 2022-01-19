@@ -156,7 +156,7 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
                     />
                 </div>
                 {(clockMode && todoFlag) ? <div className='basis-3/7 my-auto mx-4 md:hidden block'>
-                    <span >PomoClock</span>
+                    <span className='relative bottom-1' >PomoClock</span>
                     <TimerIcon
                         onClick={() => setMobileClockFlag(true)}
                         className='h-full mx-2 relative bottom-px hover:cursor-pointer'
