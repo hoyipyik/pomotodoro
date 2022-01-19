@@ -155,13 +155,13 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
                         onChange={() => attributeChangeFunction('priority', !priority)}
                     />
                 </div>
-                <div className='basis-3/7 my-auto mx-4 md:hidden block'>
+                {(clockMode && todoFlag) ? <div className='basis-3/7 my-auto mx-4 md:hidden block'>
                     <span >PomoClock</span>
                     <TimerIcon
-                        onClick={()=>setMobileClockFlag(true)}
+                        onClick={() => setMobileClockFlag(true)}
                         className='h-full mx-2 relative bottom-px hover:cursor-pointer'
                         style={pomoTimes === 0 ? gray : blue} />
-                </div>
+                </div> : null}
                 {todoFlag ? null :
                     <div className='basis3/7 my-auto mx-4'>
                         <span >Loaded</span>
