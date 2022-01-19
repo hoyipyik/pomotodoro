@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import Switch from '../tools/Switch'
+import sound from '../music/One_Drop.ogg'
 
 const PomoClock = ({ attributeChangeFunction, pomoTimes }) => {
     const [skipFlag, setSkipFlag] = useState(false)
@@ -11,17 +12,29 @@ const PomoClock = ({ attributeChangeFunction, pomoTimes }) => {
 
     const minusGap = skipFlag ? 2 : 1
 
+    const playSound = () => {
+        const audio = new Audio(sound)
+        audio.play()
+    }
+
+    const NotificationFunction = (words) => {
+        if (Notification.permission === 'granted') {
+            var notification = new Notification(words)
+            playSound()
+        }
+    }
+
     // useEffect(()=>{
     //     const pomo = Math.ceil(current/2)
     //     pomoTimesChanger(pomo)
     //     return
     // }, [current])
-    useEffect(() => {
-        if (current === 0) {
-            pomoTimesChanger(0)
-        }
-        return
-    }, [current])
+    // useEffect(() => {
+    //     if (current === 0) {
+    //         pomoTimesChanger(0)
+    //     }
+    //     return
+    // }, [current])
 
     useEffect(() => {
         setCurrent(2 * pomoTimes)
@@ -48,14 +61,17 @@ const PomoClock = ({ attributeChangeFunction, pomoTimes }) => {
                                 setTime(25 * 60)
                             else
                                 if (current % 2 !== 0) {
+                                    NotificationFunction('Rest time finish')
                                     setTime(25 * 60)
                                 } else {
+                                    NotificationFunction('Work time finish')
                                     setTime(5 * 60)
                                 }
                             setCurrent(current => {
                                 if (current - minusGap > 0) {
                                     return current - minusGap
                                 } else {
+                                    NotificationFunction('You have done your work')
                                     setDoneFlag(true)
                                     return 0
                                 }

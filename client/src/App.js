@@ -126,6 +126,8 @@ const App = () => {
         break;
       case 'clockMode':
         setClockMode(value)
+        if (value)
+          Notification.requestPermission()
         break;
       case 'keepMode':
         setKeepMode(value)
@@ -153,7 +155,7 @@ const App = () => {
       <ContextApp.Provider value={contextPassingValue}>
         {accountPageFlag ?
           <div className='flex'>
-            <Account modeChangeHandler={modeChangeHandler} keepMode={keepMode} accountPageHandler={accountPageHandler}/>
+            <Account modeChangeHandler={modeChangeHandler} keepMode={keepMode} accountPageHandler={accountPageHandler} />
             <div onClick={() => accountPageHandler(false)}><Backdrop /></div>
           </div> : null}
         {settingPageFlag ?
