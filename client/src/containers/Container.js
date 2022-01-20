@@ -15,8 +15,8 @@ const Container = ({ pomoMode, clockMode, onlineMode,
     const [todoData, setTodoData] = useState([])
     const [scheduleData, setScheduleData] = useState([])
 
-    const { account, encryptFunction, decryptFunction, itemEncryptHandler, 
-        itemDecryptHandler, arrayDecryptHandler, arrayEncryptHandler} = useContext(ContextApp)
+    const { account, encryptFunction, decryptFunction, itemEncryptHandler,
+        itemDecryptHandler, arrayDecryptHandler, arrayEncryptHandler } = useContext(ContextApp)
 
     // flag handler
 
@@ -206,6 +206,28 @@ const Container = ({ pomoMode, clockMode, onlineMode,
         localStorage.setItem('localScheduleData', JSON.stringify(newScheduleData))
     }
 
+   //
+
+    const subTasksEncryptHandler = (subarray) =>{
+        // const sub = [...subarray]
+        // const sub2 = sub.map((e,index)=>{
+        //     return e
+        // })
+        // console.log(sub2)
+        // const subarray_c = sub2.map((e, index)=>{
+        //     if (e) {
+        //         const oldSubTaskName = e.subTaskName
+        //         e.subTaskName = encryptFunction(oldSubTaskName)
+        //         // console.log(e.subTaskName)
+        //         const oldeChecked = e.checked
+        //         e.checked = encryptFunction((oldeChecked).toString())
+        //       }
+        //       return e
+        // })
+        // console.log(subarray_c)
+        return subarray
+    }
+
     /**
      * Uploader function Context
      */
@@ -214,7 +236,13 @@ const Container = ({ pomoMode, clockMode, onlineMode,
     const attributeChangeUploader = (name, value, id, type, chain) => {
         if (onlineMode) {
             const name_c = encryptFunction(name.toString())
-            const value_c = encryptFunction(value.toString())
+            let value_c = null
+            if (name !== 'subTasks')
+                value_c = encryptFunction(value.toString())
+            else {
+                console.log(value, 'value')
+                value_c = subTasksEncryptHandler([...value])
+            }
             const id_c = encryptFunction(id.toString())
             const type_c = encryptFunction(type.toString())
             const account_c = encryptFunction(account)
@@ -243,8 +271,8 @@ const Container = ({ pomoMode, clockMode, onlineMode,
                     console.log(err)
                     window.alert('You are offline now, turn to local ')
                     modeChangeHandler(false, "onlineMode")
-                    const tag = type ? 'todo' : 'schedule'
-                    suddenOfflineHandler(tag)
+                    // const tag = type ? 'todo' : 'schedule'
+                    suddenOfflineHandler()
                 })
             if (name === 'push') {
                 if (value) {
