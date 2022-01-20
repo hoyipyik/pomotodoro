@@ -8,6 +8,7 @@ import Slider from '../tools/Slider'
 import { Context } from '../tools/Context'
 import { ContextApp } from '../tools/Context'
 import PomoClock from './PomoClock'
+import CryptoJS from 'crypto-js'
 import TimerIcon from '@material-ui/icons/Timer'
 
 const SubInfo = ({ infoSpace, infoPageHandler }) => {
@@ -50,7 +51,8 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
 
     const addSubTaskFunction = () => {
         const seed = new Date()
-        let id = seed.getTime()
+        let id = seed.getTime()+13
+        // id = CryptoJS.SHA256(id).toString()
         const item = {
             id: id,
             subTaskName: inputHolder,
@@ -121,7 +123,7 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
         return <SubItem
             deleteSubTaskHandler={deleteSubTaskHandler}
             checkSubTaskFHandler={checkSubTaskFHandler}
-            key={e.id * 3 + 0.01} id={e.id}
+            key={e.id+String(e.id*2+0.0001)} id={e.id}
             subTaskName={e.subTaskName} checked={e.checked} />
     })
 

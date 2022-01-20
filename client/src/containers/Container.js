@@ -15,7 +15,8 @@ const Container = ({ pomoMode, clockMode, onlineMode,
     const [todoData, setTodoData] = useState([])
     const [scheduleData, setScheduleData] = useState([])
 
-    const { account } = useContext(ContextApp)
+    const { account, encryptFunction, decryptFunction, itemEncryptHandler, 
+        itemDecryptHandler, arrayDecryptHandler, arrayEncryptHandler} = useContext(ContextApp)
 
     // flag handler
 
@@ -40,24 +41,29 @@ const Container = ({ pomoMode, clockMode, onlineMode,
     const onlineDataFetchingHandler = () => {
         console.log('fetching online')
         if (account) {
-            axios.post('/todoData.json', { account: account })
+            const account_c = encryptFunction(account)
+            axios.post('/todoData.json', { account_c: account_c })
                 .then(res => {
                     const { data } = res
-                    const onlineData = data
-                    if (onlineData)
+                    const onlineData_c = data
+                    if (onlineData_c) {
+                        const onlineData = arrayDecryptHandler([...onlineData_c])
                         setDataFunction(true, onlineData, 'online')
+                    }
                 })
                 .catch(err => {
                     console.log(err)
                     window.alert('You are offline now, turn to local ')
                     modeChangeHandler(false, "onlineMode")
                 })
-            axios.post('/scheduleData.json', { account: account })
+            axios.post('/scheduleData.json', { account_c: account_c })
                 .then(res => {
                     const { data } = res
-                    const onlineData = data
-                    if (onlineData)
+                    const onlineData_c = data
+                    if (onlineData_c) {
+                        const onlineData = arrayDecryptHandler([...onlineData_c])
                         setDataFunction(false, onlineData, 'online')
+                    }
                 })
                 .catch(err => {
                     console.log(err)
@@ -207,11 +213,17 @@ const Container = ({ pomoMode, clockMode, onlineMode,
 
     const attributeChangeUploader = (name, value, id, type, chain) => {
         if (onlineMode) {
-            const data = { name, value, id, type, chain, account }
-            axios.post('/attributeChange.json', data)
+            const name_c = encryptFunction(name.toString())
+            const value_c = encryptFunction(value.toString())
+            const id_c = encryptFunction(id.toString())
+            const type_c = encryptFunction(type.toString())
+            const account_c = encryptFunction(account)
+            const data_c = { name_c, value_c, id_c, type_c, account_c }
+            axios.post('/attributeChange.json', data_c)
                 .then(res => {
                     if (chain) {
-                        axios.post('/attributeChange.json', { name, value, id, type: !type, chain, account })
+                        const type_c_opposite = encryptFunction((!type).toString())
+                        axios.post('/attributeChange.json', { name_c, value_c, id_c, type_c: type_c_opposite, account_c })
                             .then(res => {
                                 console.log('update')
                             })
@@ -219,8 +231,8 @@ const Container = ({ pomoMode, clockMode, onlineMode,
                                 console.log(err)
                                 window.alert('You are offline now, turn to local ')
                                 modeChangeHandler(false, "onlineMode")
-                                const tag = type ? 'todo' : 'schedule'
-                                suddenOfflineHandler(tag)
+                                // const tag = type ? 'todo' : 'schedule'
+                                suddenOfflineHandler()
                             })
                     } else {
                         console.log('update')
@@ -246,7 +258,9 @@ const Container = ({ pomoMode, clockMode, onlineMode,
                         }
                         return e
                     })
-                    const packData = { item, type: true, account }
+                    const item_c = itemEncryptHandler(item)
+                    const type_c_true = encryptFunction('true')
+                    const packData = { item_c, type_c: type_c_true, account_c }
                     axios.post('/itemAdd.json', packData)
                         .then(res => {
                             console.log('update add todo')
@@ -259,7 +273,7 @@ const Container = ({ pomoMode, clockMode, onlineMode,
                             suddenOfflineHandler(tag)
                         })
                 } else {
-                    const packData = { id, account }
+                    const packData = { id_c, account_c }
                     axios.post('/chainDelete.json', packData)
                         .then(res => {
                             console.log('update minus todo')
@@ -281,7 +295,10 @@ const Container = ({ pomoMode, clockMode, onlineMode,
 
     const itemDeleteUploader = (id, type) => {
         if (onlineMode) {
-            const data = { id, account }
+            const id_c = encryptFunction(String(id))
+            const account_c = encryptFunction(account)
+            // console.log(id_c)
+            const data = { id_c, account_c }
             axios.post('/itemDelete.json', data)
                 .then(res => {
                     console.log('delete')

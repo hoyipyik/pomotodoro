@@ -6,6 +6,7 @@ import Setting from './components/Setting'
 import Backdrop from './tools/Backdrop'
 import { ContextApp } from './tools/Context'
 import Account from './components/Account'
+import CryptoJS from 'crypto-js'
 
 const App = () => {
   const [todoFlag, setTodoFlag] = useState(true)
@@ -144,11 +145,105 @@ const App = () => {
     }
   }
 
+  /**
+   * crypt and decrypt function
+   */
+
+  const encryptFunction = (str) => {
+    const password = '再びホワイトアルバムの季節です&TheTruthShallMakeUFree'
+    const key = CryptoJS.SHA256(password).toString()
+    const encryptData = CryptoJS.AES.encrypt(str, key).toString()
+    return encryptData
+  }
+
+  const decryptFunction = (str) => {
+    const password = '再びホワイトアルバムの季節です&TheTruthShallMakeUFree'
+    const key = CryptoJS.SHA256(password).toString()
+    const decryptData = CryptoJS.AES.decrypt(str, key).toString(CryptoJS.enc.Utf8)
+    return decryptData
+  }
+
+  const itemDecryptHandler = (item_c) => {
+    const { id, taskName, checked, priority, pomoTimes, chain, push, subTasks } = item_c
+    const taskName_d = decryptFunction(taskName)
+    const checked_d = (decryptFunction(checked) === 'true')
+    const priority_d = (decryptFunction(priority) === 'true')
+    const pomoTimes_d = parseInt(decryptFunction(pomoTimes))
+    const chain_d = (decryptFunction(chain) === 'true')
+    const push_d = (decryptFunction(push) === 'true')
+    const subTasks_d = subTasks.map((e, index) => {
+      if (e) {
+        e.subTaskName = decryptFunction(e.subTaskName)
+        e.checked = (decryptFunction(e.checked) === 'true')
+      }
+      return e
+    })
+    const item = {
+      id: id,
+      taskName: taskName_d,
+      checked: checked_d,
+      priority: priority_d,
+      pomoTimes: pomoTimes_d,
+      chain: chain_d,
+      push: push_d,
+      subTasks: subTasks_d,
+    }
+    return item
+  }
+
+  const itemEncryptHandler = (item) => {
+    const { id, taskName, checked, priority, pomoTimes, chain, push, subTasks } = item
+    const taskName_c = encryptFunction(taskName)
+    const checked_c = encryptFunction(checked.toString())
+    const priority_c = encryptFunction(priority.toString())
+    const pomoTimes_c = encryptFunction(String(pomoTimes))
+    const chain_c = encryptFunction(chain.toString())
+    const push_c = encryptFunction(push.toString())
+    const subTasks_c = subTasks.map((e, index) => {
+      if (e) {
+        e.subTaskName = encryptFunction(e.subTaskName)
+        e.checked = encryptFunction(e.checked.toString())
+      }
+      return e
+    })
+    const item_c = {
+      id: id,
+      taskName: taskName_c,
+      checked: checked_c,
+      priority: priority_c,
+      pomoTimes: pomoTimes_c,
+      chain: chain_c,
+      push: push_c,
+      subTasks: subTasks_c,
+    }
+    return item_c
+  }
+
+  const arrayDecryptHandler = (array_c) => {
+    const array = array_c.map((e, index) => {
+      if (e)
+        e = itemDecryptHandler(e)
+      return e
+    })
+    return array
+  }
+
+  const arrayEncryptHandler = (array) => {
+    const array_c = array.map((e, index) => {
+      if (e)
+        e = itemEncryptHandler(e)
+      return e
+    })
+    return array_c
+  }
+
+  //
+
   const contextPassingValue = {
     minSidebarHandler, todoFlag, account,
-    accountHandler, accountInfo, accountInfoHandler
+    accountHandler, accountInfo, accountInfoHandler,
+    encryptFunction, decryptFunction, itemEncryptHandler, itemDecryptHandler, arrayDecryptHandler, arrayEncryptHandler
   }
-  // console.log(onlineMode, 'render app')
 
   return (
     <div>

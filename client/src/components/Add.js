@@ -2,13 +2,15 @@ import React, {useState, useContext, useEffect, useRef} from 'react'
 import MenuIcon from '@material-ui/icons/Menu'
 import { Context } from '../tools/Context'
 import { ContextApp } from '../tools/Context'
+import CryptoJS from 'crypto-js'
 import axios from '../axios'
 
 const Add = ({onlineMode, suddenOfflineHandler}) => {
     const [taskName, setTaskName] = useState('')
 
     const {itemAddHandler, modeChangeHandler} = useContext(Context)
-    const {minSidebarHandler, todoFlag, account} = useContext(ContextApp)
+    const {minSidebarHandler, todoFlag, account, encryptFunction, decryptFunction, 
+        itemEncryptHandler, itemDecryptHandler, arrayDecryptHandler, arrayEncryptHandler} = useContext(ContextApp)
     const ref = useRef()
 
     useEffect(()=>{
@@ -40,7 +42,9 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
     const addItemFunction = (name, type) =>{
         const taskName = name
         const seed = new Date()
-        let id = seed.getTime()
+        let id = seed.getTime()+21
+        // id = CryptoJS.SHA256(id).toString()
+        // console.log(typeof(id))
         const item = {
             id: id,
             taskName: taskName,
@@ -87,7 +91,10 @@ const Add = ({onlineMode, suddenOfflineHandler}) => {
 
     const itemAddUploader = (item, type) =>{
         if(onlineMode){
-            const pack = {item, type, account}
+            const item_c = itemEncryptHandler(item)
+            const type_c = encryptFunction(type.toString())
+            const account_c = encryptFunction(account)
+            const pack = {item_c, type_c, account_c}
             const tag = type ? 'todo' : 'schedule'
             axios.post('/itemAdd.json', pack)
             .then(res=>{
