@@ -11,7 +11,7 @@ const Account = ({ modeChangeHandler, keepMode, accountPageHandler }) => {
     const [passwordHolder, setPasswordHolder] = useState('')
     const [deleteConfirmFlag, setDeleteConfirmFlag] = useState(false)
 
-    const { account, accountHandler, accountInfo, accountInfoHandler } = useContext(ContextApp)
+    const { account, accountHandler, accountInfo, accountInfoHandler, encryptFunction, decryptFunction } = useContext(ContextApp)
     const { username, name, icon } = accountInfo
 
     const blue = { color: '#155fd8' }
@@ -21,10 +21,15 @@ const Account = ({ modeChangeHandler, keepMode, accountPageHandler }) => {
 
     useEffect(() => {
         if (account) {
-            const pack = { account: account }
+            const account_c = encryptFunction(account)
+            const pack = { account_c: account_c }
             axios.post('/info.json', pack)
                 .then(res => {
-                    const info = res.data
+                    const {username_c, icon_c, name_c} = res.data
+                    const username = decryptFunction(username_c)
+                    const icon = decryptFunction(icon_c)
+                    const name = decryptFunction(name_c)
+                    const info = {username, icon, name}
                     accountInfoHandler(info)
                     if (keepMode)
                         localStorage.setItem('accountInfo', JSON.stringify(info))
@@ -49,7 +54,7 @@ const Account = ({ modeChangeHandler, keepMode, accountPageHandler }) => {
                     console.log('listener')
                     if (!deleteConfirmFlag)
                         submitButton()
-                    else 
+                    else
                         deleteConfirmHandler()
                 }
             }
@@ -80,7 +85,10 @@ const Account = ({ modeChangeHandler, keepMode, accountPageHandler }) => {
         const type = signed
         const username = usernameHolder
         const password = passwordHolder
-        const pack = { username, password }
+        const username_c = encryptFunction(username)
+        const password_c = encryptFunction(password)
+        const pack = { username_c, password_c }
+        // console.log(pack)
         const addr = type ? '/login.json' : '/signup.json'
         if (usernameHolder && passwordHolder) {
             axios.post(addr, pack)
@@ -137,7 +145,9 @@ const Account = ({ modeChangeHandler, keepMode, accountPageHandler }) => {
     const deleteConfirmHandler = () => {
         const username = usernameHolder
         const password = passwordHolder
-        const pack = { username, password }
+        const username_c = encryptFunction(username)
+        const password_c = encryptFunction(password)
+        const pack = { username_c, password_c }
         axios.post('/deleteAccount.json', pack)
             .then(res => {
                 const backFlag = res.data.msg

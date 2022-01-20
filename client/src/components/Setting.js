@@ -16,7 +16,8 @@ const Setting = ({ onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHa
     const [localTodoData, setLocalTodoData] = useState([])
     const [localScheduleData, setLocalScheduleData] = useState([])
 
-    const { account } = useContext(ContextApp)
+    const { account, encryptFunction, decryptFunction, itemEncryptHandler, 
+        itemDecryptHandler, arrayDecryptHandler, arrayEncryptHandler} = useContext(ContextApp)
 
     useEffect(() => {
         if (!onlineMode) {
@@ -35,20 +36,25 @@ const Setting = ({ onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHa
     const onlineDataFetchingFunction = () => {
         console.log(account)
         if (account) {
-            axios.post('/todoData.json', account)
+            const account_c = encryptFunction(account)
+            axios.post('/todoData.json', { account_c: account_c })
                 .then(res => {
-                    const { data } = res
+                    const data_c = res.data
                     // console.log(data, '[setting.js]: onelineTodoData fetched')
-                    if (data)
+                    if (data_c) {
+                        const data = arrayDecryptHandler([...data_c])
                         setOnlineTodoData(data)
+                    }
                 })
                 .catch(err => console.log(err))
-            axios.post('/scheduleData.json', account)
+            axios.post('/scheduleData.json', { account_c: account_c })
                 .then(res => {
-                    const { data } = res
+                    const data_c = res.data
                     // console.log(data, '[setting.js]: oneline Schedule Data fetched')
-                    if (data)
+                    if (data_c) {
+                        const data = arrayDecryptHandler([...data_c])
                         setOnlineScheduleData(data)
+                    }
                 })
                 .catch(err => console.log(err))
         }
@@ -70,7 +76,7 @@ const Setting = ({ onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHa
         onlineDataFetchingFunction()
         localDataFetchingFunction()
         return
-    }, [])
+    }, [])  
 
     const overrideOnline2LocalRadioFunction = (e) => {
         const { value } = e.target
@@ -101,9 +107,12 @@ const Setting = ({ onlineMode, clockMode, pomoMode, refreshHandler, modeChangeHa
      */
 
     const onlinePushHandler = (todo, schedule, type) => {
-        axios.post('/merge_todo.json', { todo, account })
+        const todo_c = arrayEncryptHandler(todo)
+        const schedule_c = arrayEncryptHandler(schedule)
+        const account_c = encryptFunction(account)
+        axios.post('/merge_todo.json', { todo_c, account_c })
             .then(res => {
-                axios.post('/merge_schedule.json', { schedule, account })
+                axios.post('/merge_schedule.json', { schedule_c, account_c })
                     .then(res => {
                         console.log(`[${type}] local to online success`)
                         refreshHandler()
