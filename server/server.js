@@ -91,15 +91,21 @@ app.post('/info.json', (req, res) => {
         // console.log(queryFactor)
         dbo.collection('info').find(queryFactor).toArray((err1, res1) => {
             if (err1) throw err1
-            const { username, icon, name } = res1[0]
-            const username_c = encryptFunction(username)
-            const icon_c = encryptFunction(icon)
-            const name_c = name
-            const backData = { username_c, icon_c, name_c }
-            // console.log(res1)
-            res.send(backData)
-            db.close()
-            console.log('info send')
+            if (res1[0]) {
+                const { username, icon, name } = res1[0]
+                const username_c = encryptFunction(username)
+                const icon_c = encryptFunction(icon)
+                const name_c = name
+                const backData = { username_c, icon_c, name_c }
+                // console.log(res1)
+                res.send(backData)
+                db.close()
+                console.log('info send')
+            }else{
+                res.send({})
+                db.close()
+                console.log('info send')
+            }
         })
 
     })
@@ -237,7 +243,7 @@ app.post('/itemDelete.json', (req, res) => {
             if (err1) throw err1
             dbo.collection('scheduleData').deleteOne(queryFactor, (err2, res2) => {
                 if (err2) throw err2
-                console.log( "delete success")
+                console.log("delete success")
                 res.send({ res1, res2, msg: 'delete' })
                 db.close()
             })
