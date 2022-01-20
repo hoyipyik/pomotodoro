@@ -1,10 +1,27 @@
 const express = require('express')
 const app = express()
 const url = 'mongodb://localhost:27017/'
+const CryptoJS = require('crypto-js')
 
 app.use(express.json())
 
 app.set('port', process.env.PORT || 4000)
+
+const encryptFunction = (str) => {
+    // const CryptoJS = require('crypto-js')
+    const password = 'You Shall Know the Truth & the Truth Shall Make You Free'
+    const key = CryptoJS.SHA256(password).toString()
+    const encryptData = CryptoJS.AES.encrypt(str, key).toString()
+    return encryptData
+}
+
+const decryptFunction = (str) => {
+    // const CryptoJS = require('crypto-js')
+    const password = 'You Shall Know the Truth & the Truth Shall Make You Free'
+    const key = CryptoJS.SHA256(password).toString()
+    const decryptData = CryptoJS.AES.decrypt(str, key).toString(CryptoJS.enc.Utf8)
+    return decryptData
+}
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
@@ -14,7 +31,9 @@ app.use(function (req, res, next) {
 
 app.post('/deleteAccount.json', (req, res) => {
     const rawData = req.body
-    const { username, password } = rawData
+    const { username_c, password_c } = rawData
+    const username = decryptFunction(username_c)
+    const password = decryptFunction(password_c)
     const user = username.replaceAll(' ', '_')
     const queryFactor = { username: user }
     const MongoClient = require('mongodb').MongoClient
@@ -53,9 +72,10 @@ app.post('/deleteAccount.json', (req, res) => {
 
 app.post('/info.json', (req, res) => {
     const rawData = req.body
-    const { account } = rawData
+    const { account_c } = rawData
+    const account = decryptFunction(account_c)
     const user = account.replaceAll(' ', '_')
-    console.log(user)
+    // console.log(user)
     const queryFactor = { username: user }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
@@ -64,8 +84,12 @@ app.post('/info.json', (req, res) => {
         // console.log(queryFactor)
         dbo.collection('info').find(queryFactor).toArray((err1, res1) => {
             if (err1) throw err1
-            const backData = res1[0]
-            console.log(res1)
+            const { username, icon, name } = res1[0]
+            const username_c = encryptFunction(username)
+            const icon_c = encryptFunction(icon)
+            const name_c = encryptFunction(name)
+            const backData = { username_c, icon_c, name_c }
+            // console.log(res1)
             res.send(backData)
             db.close()
             console.log('info send')
@@ -77,7 +101,9 @@ app.post('/info.json', (req, res) => {
 app.post('/login.json', (req, res) => {
     const rawData = req.body
     // console.log(rawData)
-    const { username, password } = rawData
+    const { username_c, password_c } = rawData
+    const username = decryptFunction(username_c)
+    const password = decryptFunction(password_c)
     const user = username.replaceAll(' ', '_')
     const queryFactor = { username: user }
     const MongoClient = require('mongodb').MongoClient
@@ -102,7 +128,9 @@ app.post('/login.json', (req, res) => {
 
 app.post('/signup.json', (req, res) => {
     const rawData = req.body
-    const { username, password } = rawData
+    const { username_c, password_c } = rawData
+    const username = decryptFunction(username_c)
+    const password = decryptFunction(password_c)
     user = username.replaceAll(' ', '_')
     const item = { username: user, password }
     const queryFactor = { username: user }
@@ -113,17 +141,17 @@ app.post('/signup.json', (req, res) => {
         let dbo = db.db('userInfo')
         dbo.collection('account').find(queryFactor).toArray((err1, resd) => {
             if (err1) throw err1
-            console.log(resd)
+            // console.log(resd)
             if (resd[0]) {
                 res.send({ msg: false })
                 console.log('username used')
             } else {
                 dbo.collection('account').insertOne(item, (err2, res2) => {
                     if (err2) throw err2
-                    console.log(res2, 'username added')
+                    console.log('username added')
                     dbo.collection('info').insertOne(infoItem, (err3, res3) => {
                         if (err3) throw err3
-                        console.log(res3, 'user info added')
+                        console.log('user info added')
                         console.log('signup success')
                         const MongoClient2 = require('mongodb').MongoClient
                         MongoClient2.connect(url + user, (err3, db2) => {
@@ -148,7 +176,8 @@ app.post('/signup.json', (req, res) => {
 })
 
 app.post('/todoData.json', (req, res) => {
-    const { account } = req.body
+    const { account_c } = req.body
+    const account = decryptFunction(account_c)
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
@@ -157,6 +186,7 @@ app.post('/todoData.json', (req, res) => {
             if (err1) throw err1
             const data = [...resd]
             res.send(data)
+            // console.log(data)
             console.log('send todoData')
             db.close()
         })
@@ -165,7 +195,8 @@ app.post('/todoData.json', (req, res) => {
 })
 
 app.post('/scheduleData.json', (req, res) => {
-    const { account } = req.body
+    const { account_c } = req.body
+    const account = decryptFunction(account_c)
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
@@ -182,7 +213,10 @@ app.post('/scheduleData.json', (req, res) => {
 
 app.post('/itemDelete.json', (req, res) => {
     const rawData = req.body
-    const { id, account } = rawData
+    const { id_c, account_c } = rawData
+    const account = decryptFunction(account_c)
+    const id = parseInt(decryptFunction(id_c))
+    // console.log(id, 'delete id')
     const queryFactor = { id: id }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
@@ -192,7 +226,7 @@ app.post('/itemDelete.json', (req, res) => {
             if (err1) throw err1
             dbo.collection('scheduleData').deleteOne(queryFactor, (err2, res2) => {
                 if (err2) throw err2
-                console.log("delete success")
+                console.log( "delete success")
                 res.send({ res1, res2, msg: 'delete' })
                 db.close()
             })
@@ -202,7 +236,9 @@ app.post('/itemDelete.json', (req, res) => {
 
 app.post('/chainDelete.json', (req, res) => {
     const rawData = req.body
-    const { id, account } = rawData
+    const { id_c, account_c } = rawData
+    const id = parseInt(decryptFunction(id_c))
+    const account = decryptFunction(account_c)
     const queryFactor = { id: id }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
@@ -219,7 +255,10 @@ app.post('/chainDelete.json', (req, res) => {
 
 app.post('/itemAdd.json', (req, res) => {
     const rawData = req.body
-    const { item, type, account } = rawData
+    const { item_c, type_c, account_c } = rawData
+    const item = item_c
+    const account = decryptFunction(account_c)
+    const type = (decryptFunction(type_c) === 'true')
     const collectionName = type ? 'todoData' : 'scheduleData'
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
@@ -236,7 +275,11 @@ app.post('/itemAdd.json', (req, res) => {
 
 app.post('/attributeChange.json', (req, res) => {
     const rawData = req.body
-    const { id, name, value, type, chain, account } = rawData
+    const { id_c, name_c, value_c, type_c, account_c } = rawData
+    const id = parseInt(decryptFunction(id_c))
+    const name = decryptFunction(name_c)
+    const type = (decryptFunction(type_c) === 'true')
+    const account = decryptFunction(account_c)
     const queryFactor = { id: id }
     const collectionName = type ? 'todoData' : 'scheduleData'
     const MongoClient = require('mongodb').MongoClient
@@ -247,9 +290,9 @@ app.post('/attributeChange.json', (req, res) => {
             if (err1) throw err1
             let oldItem = res1[0]
             if (oldItem) {
-                oldItem[name] = value
+                oldItem[name] = value_c
                 if (name === 'push')
-                    oldItem.chain = value
+                    oldItem.chain = value_c
                 const newItem = oldItem
                 const setData = { $set: newItem }
                 dbo.collection(collectionName).updateOne(queryFactor, setData, (err2, res2) => {
@@ -265,11 +308,13 @@ app.post('/attributeChange.json', (req, res) => {
 
 app.post('/merge_schedule.json', (req, res) => {
     const rawData = req.body
-    const { schedule, account } = rawData
+    const { schedule_c, account_c } = rawData
+    const schedule = schedule_c
+    const account = decryptFunction(account_c)
     const MongoClient2 = require('mongodb').MongoClient
     MongoClient2.connect(url, (err, db) => {
         if (err) throw err
-        let dbo2 = db.db("Ho_Yipyik")
+        let dbo2 = db.db(account)
         dbo2.collection('scheduleData').drop((err2, res2) => {
             if (err2) throw err2
             console.log('drop schedule')
@@ -297,7 +342,9 @@ app.post('/merge_schedule.json', (req, res) => {
 
 app.post('/merge_todo.json', (req, res) => {
     const rawData = req.body
-    const { todo, account } = rawData
+    const { todo_c, account_c } = rawData
+    const todo = todo_c
+    const account = decryptFunction(account_c)
     // console.log(rawData)
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
