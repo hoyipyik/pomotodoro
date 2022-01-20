@@ -18,12 +18,12 @@ const Item = ({ id, taskName, checked, priority, pomoTimes, chain, push }) => {
     const { todoFlag } = useContext(ContextApp)
 
     const pomoIcon = seed.map((e, index) => {
-        const element = <AcUnitIcon key={id+String(index*3+0.00000001)} style={gray} className='hover:cursor-pointer'
+        const element = <AcUnitIcon key={id+index*3+0.00000001} style={gray} className='hover:cursor-pointer'
             onClick={() => attributeChangeFunction('pomoTimes', index + 1)} />
         if (pomoTimes === 0)
             return element
         else if (index < pomoTimes)
-            return <AcUnitIcon key={id+String(index+0.00001)} style={blue} className='hover:cursor-pointer'
+            return <AcUnitIcon key={id+index+0.00001} style={blue} className='hover:cursor-pointer'
                 onClick={() => attributeChangeFunction('pomoTimes', index + 1)} />
         else
             return element

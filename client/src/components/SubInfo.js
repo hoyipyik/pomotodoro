@@ -51,7 +51,7 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
 
     const addSubTaskFunction = () => {
         const seed = new Date()
-        let id = seed.getTime()+13
+        let id = seed.getTime() + 13
         // id = CryptoJS.SHA256(id).toString()
         const item = {
             id: id,
@@ -123,7 +123,7 @@ const SubInfo = ({ infoSpace, infoPageHandler }) => {
         return <SubItem
             deleteSubTaskHandler={deleteSubTaskHandler}
             checkSubTaskFHandler={checkSubTaskFHandler}
-            key={e.id+String(e.id*2+0.0001)} id={e.id}
+            key={e.id + 0.0001} id={e.id}
             subTaskName={e.subTaskName} checked={e.checked} />
     })
 
