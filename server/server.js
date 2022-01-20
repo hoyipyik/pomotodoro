@@ -9,7 +9,7 @@ app.set('port', process.env.PORT || 4000)
 
 const encryptFunction = (str) => {
     // const CryptoJS = require('crypto-js')
-    const password = 'You Shall Know the Truth & the Truth Shall Make You Free'
+    const password = '再びホワイトアルバムの季節です&TheTruthShallMakeUFree'
     const key = CryptoJS.SHA256(password).toString()
     const encryptData = CryptoJS.AES.encrypt(str, key).toString()
     return encryptData
@@ -17,10 +17,15 @@ const encryptFunction = (str) => {
 
 const decryptFunction = (str) => {
     // const CryptoJS = require('crypto-js')
-    const password = 'You Shall Know the Truth & the Truth Shall Make You Free'
+    const password = '再びホワイトアルバムの季節です&TheTruthShallMakeUFree'
     const key = CryptoJS.SHA256(password).toString()
     const decryptData = CryptoJS.AES.decrypt(str, key).toString(CryptoJS.enc.Utf8)
     return decryptData
+}
+
+const hashingFunction = (str) => {
+    const key = CryptoJS.SHA3(str).toString()
+    return key
 }
 
 app.use(function (req, res, next) {
@@ -35,7 +40,9 @@ app.post('/deleteAccount.json', (req, res) => {
     const username = decryptFunction(username_c)
     const password = decryptFunction(password_c)
     const user = username.replaceAll(' ', '_')
-    const queryFactor = { username: user }
+    const user_rc = hashingFunction(user)
+    const password_rc = hashingFunction(password)
+    const queryFactor = { username: user_rc }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
@@ -43,7 +50,7 @@ app.post('/deleteAccount.json', (req, res) => {
         dbo.collection('account').find(queryFactor).toArray((err1, res1) => {
             if (err1) throw err1
             if (res1[0])
-                if (res1[0].password === password) {
+                if (res1[0].password === password_rc) {
                     console.log('password match')
                     dbo.collection('account').deleteOne(queryFactor, (err2, res2) => {
                         if (err2) throw err2
@@ -75,8 +82,8 @@ app.post('/info.json', (req, res) => {
     const { account_c } = rawData
     const account = decryptFunction(account_c)
     const user = account.replaceAll(' ', '_')
-    // console.log(user)
-    const queryFactor = { username: user }
+    const user_rc = hashingFunction(user)
+    const queryFactor = { username: user_rc }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
@@ -87,7 +94,7 @@ app.post('/info.json', (req, res) => {
             const { username, icon, name } = res1[0]
             const username_c = encryptFunction(username)
             const icon_c = encryptFunction(icon)
-            const name_c = encryptFunction(name)
+            const name_c = name
             const backData = { username_c, icon_c, name_c }
             // console.log(res1)
             res.send(backData)
@@ -105,7 +112,9 @@ app.post('/login.json', (req, res) => {
     const username = decryptFunction(username_c)
     const password = decryptFunction(password_c)
     const user = username.replaceAll(' ', '_')
-    const queryFactor = { username: user }
+    const user_rc = hashingFunction(user)
+    const password_rc = hashingFunction(password)
+    const queryFactor = { username: user_rc }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
@@ -113,12 +122,12 @@ app.post('/login.json', (req, res) => {
         dbo.collection('account').find(queryFactor).toArray((err2, res2) => {
             // console.log(res2)
             if (res2[0]) {
-                if (res2[0].password === password) {
-                    res.send({ msg: true })
+                if (res2[0].password === password_rc) {
+                    res.send({ msg: encryptFunction('true') })
                     console.log('login success')
                 }
             } else {
-                res.send({ msg: false })
+                res.send({ msg: encryptFunction('false') })
                 db.close()
                 console.log('login fail')
             }
@@ -132,9 +141,11 @@ app.post('/signup.json', (req, res) => {
     const username = decryptFunction(username_c)
     const password = decryptFunction(password_c)
     user = username.replaceAll(' ', '_')
-    const item = { username: user, password }
-    const queryFactor = { username: user }
-    const infoItem = { username: user, icon: 'default', name: username }
+    const user_rc = hashingFunction(user)
+    const password_rc = hashingFunction(password)
+    const item = { username: user_rc, password: password_rc }
+    const queryFactor = { username: user_rc }
+    const infoItem = { username: user_rc, icon: 'default', name: username_c }
     const MongoClient = require('mongodb').MongoClient
     MongoClient.connect(url, (err, db) => {
         if (err) throw err
@@ -143,7 +154,7 @@ app.post('/signup.json', (req, res) => {
             if (err1) throw err1
             // console.log(resd)
             if (resd[0]) {
-                res.send({ msg: false })
+                res.send({ msg: encryptFunction('false') })
                 console.log('username used')
             } else {
                 dbo.collection('account').insertOne(item, (err2, res2) => {
@@ -162,7 +173,7 @@ app.post('/signup.json', (req, res) => {
                                 console.log('new db create todoData colection')
                                 dbo2.createCollection('scheduleData', (err5, res5) => {
                                     if (err5) throw err5
-                                    res.send({ msg: true })
+                                    res.send({ msg: encryptFunction('true') })
                                     db.close()
                                     console.log('new db create scheduleData collection')
                                 })

@@ -93,7 +93,8 @@ const Account = ({ modeChangeHandler, keepMode, accountPageHandler }) => {
         if (usernameHolder && passwordHolder) {
             axios.post(addr, pack)
                 .then(res => {
-                    const backFlag = res.data.msg
+                    const backFlag_c = res.data.msg
+                    const backFlag = (decryptFunction(backFlag_c) === 'true')
                     if (backFlag) {
                         if (type) {
                             const user = username.replaceAll(' ', '_')

@@ -150,14 +150,14 @@ const App = () => {
    */
 
   const encryptFunction = (str) => {
-    const password = 'You Shall Know the Truth & the Truth Shall Make You Free'
+    const password = '再びホワイトアルバムの季節です&TheTruthShallMakeUFree'
     const key = CryptoJS.SHA256(password).toString()
     const encryptData = CryptoJS.AES.encrypt(str, key).toString()
     return encryptData
   }
 
   const decryptFunction = (str) => {
-    const password = 'You Shall Know the Truth & the Truth Shall Make You Free'
+    const password = '再びホワイトアルバムの季節です&TheTruthShallMakeUFree'
     const key = CryptoJS.SHA256(password).toString()
     const decryptData = CryptoJS.AES.decrypt(str, key).toString(CryptoJS.enc.Utf8)
     return decryptData
