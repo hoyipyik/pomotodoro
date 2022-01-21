@@ -1,0 +1,605 @@
+Express started on http://localhost:3000 
+press Ctrl - C to terminate....
+[]
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e65ff23ce402a0f77b1794")
+} username added
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e65ff23ce402a0f77b1795")
+} user info added
+signup success
+new db create todoData colection
+new db create scheduleData collection
+login success
+t
+[
+  {
+    _id: new ObjectId("61e65ff23ce402a0f77b1795"),
+    username: 't',
+    icon: 'default',
+    name: 't'
+  }
+]
+info send
+send todoData
+send scheduleData
+send todoData
+send scheduleData
+send scheduleData
+send todoData
+t
+[
+  {
+    _id: new ObjectId("61e65ff23ce402a0f77b1795"),
+    username: 't',
+    icon: 'default',
+    name: 't'
+  }
+]
+info send
+[]
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e6636d3ce402a0f77b1796")
+} username added
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e6636d3ce402a0f77b1797")
+} user info added
+signup success
+new db create todoData colection
+new db create scheduleData collection
+login success
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+send todoData
+send scheduleData
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+insert successfully
+insert successfully
+update success
+update success
+update success
+update success
+[]
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e666d23ce402a0f77b179a")
+} username added
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e666d23ce402a0f77b179b")
+} user info added
+signup success
+new db create todoData colection
+new db create scheduleData collection
+insert successfully
+insert successfully
+login success
+Johnny_Who
+[
+  {
+    _id: new ObjectId("61e666d23ce402a0f77b179b"),
+    username: 'Johnny_Who',
+    icon: 'default',
+    name: 'Johnny Who'
+  }
+]
+info send
+send scheduleData
+send todoData
+insert successfully
+insert successfully
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+insert successfully
+insert successfully
+send todoData
+send scheduleData
+Johnny_Who
+[
+  {
+    _id: new ObjectId("61e666d23ce402a0f77b179b"),
+    username: 'Johnny_Who',
+    icon: 'default',
+    name: 'Johnny Who'
+  }
+]
+info send
+[]
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e673123ce402a0f77b17a2")
+} username added
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e673123ce402a0f77b17a3")
+} user info added
+signup success
+new db create todoData colection
+new db create scheduleData collection
+login success
+Ho_Yipyik
+[
+  {
+    _id: new ObjectId("61e673123ce402a0f77b17a3"),
+    username: 'Ho_Yipyik',
+    icon: 'default',
+    name: 'Ho Yipyik'
+  }
+]
+info send
+send todoData
+send scheduleData
+send todoData
+send scheduleData
+send scheduleData
+send todoData
+send todoData
+send scheduleData
+send scheduleData
+send todoData
+Ho_Yipyik
+[
+  {
+    _id: new ObjectId("61e673123ce402a0f77b17a3"),
+    username: 'Ho_Yipyik',
+    icon: 'default',
+    name: 'Ho Yipyik'
+  }
+]
+info send
+send todoData
+send scheduleData
+send todoData
+send scheduleData
+send todoData
+send scheduleData
+login success
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+send scheduleData
+send todoData
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+login success
+Ho_Yel-i
+send todoData
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+send scheduleData
+send todoData
+send scheduleData
+send todoData
+send scheduleData
+insert successfully
+insert successfully
+send todoData
+send scheduleData
+send todoData
+send scheduleData
+send scheduleData
+send todoData
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+send todoData
+send scheduleData
+send todoData
+send scheduleData
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1796"),
+    username: 'Ho_Yel-i',
+    password: 'hoyipyik'
+  }
+]
+username used
+login success
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+send todoData
+send scheduleData
+send scheduleData
+send todoData
+send scheduleData
+send todoData
+send scheduleData
+send todoData
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+login success
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+send todoData
+send scheduleData
+send todoData
+send scheduleData
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+login success
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+send todoData
+send scheduleData
+send todoData
+send scheduleData
+send scheduleData
+send todoData
+update success
+update success
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+Ho_Yel-i
+[
+  {
+    _id: new ObjectId("61e6636d3ce402a0f77b1797"),
+    username: 'Ho_Yel-i',
+    icon: 'default',
+    name: 'Ho Yel-i'
+  }
+]
+info send
+send todoData
+send scheduleData
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+[]
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e6ad8a3ce402a0f77b17a6")
+} username added
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e6ad8a3ce402a0f77b17a7")
+} user info added
+signup success
+new db create todoData colection
+new db create scheduleData collection
+login success
+send scheduleData
+send todoData
+test
+[
+  {
+    _id: new ObjectId("61e58533990a30c474f39315"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  },
+  {
+    _id: new ObjectId("61e6ad8a3ce402a0f77b17a7"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  }
+]
+info send
+send todoData
+send scheduleData
+insert successfully
+insert successfully
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+test
+[
+  {
+    _id: new ObjectId("61e58533990a30c474f39315"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  },
+  {
+    _id: new ObjectId("61e6ad8a3ce402a0f77b17a7"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  }
+]
+info send
+send todoData
+send scheduleData
+test
+[
+  {
+    _id: new ObjectId("61e58533990a30c474f39315"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  },
+  {
+    _id: new ObjectId("61e6ad8a3ce402a0f77b17a7"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  }
+]
+info send
+send todoData
+send scheduleData
+send todoData
+send scheduleData
+test
+[
+  {
+    _id: new ObjectId("61e58533990a30c474f39315"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  },
+  {
+    _id: new ObjectId("61e6ad8a3ce402a0f77b17a7"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  }
+]
+info send
+chain delete todo success
+update success
+update success
+update success
+send todoData
+send scheduleData
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+test
+[
+  {
+    _id: new ObjectId("61e58533990a30c474f39315"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  },
+  {
+    _id: new ObjectId("61e6ad8a3ce402a0f77b17a7"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  }
+]
+info send
+test
+[
+  {
+    _id: new ObjectId("61e58533990a30c474f39315"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  },
+  {
+    _id: new ObjectId("61e6ad8a3ce402a0f77b17a7"),
+    username: 'test',
+    icon: 'default',
+    name: 'test'
+  }
+]
+info send
+update success
+update success
+[]
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e6b1b43ce402a0f77b17aa")
+} username added
+{
+  acknowledged: true,
+  insertedId: new ObjectId("61e6b1b43ce402a0f77b17ab")
+} user info added
+signup success
+new db create todoData colection
+new db create scheduleData collection
+[
+  {
+    _id: new ObjectId("61e6b1b43ce402a0f77b17aa"),
+    username: 'hyx',
+    password: '1234560'
+  }
+]
+username used
+login success
+hyx
+[
+  {
+    _id: new ObjectId("61e6b1b43ce402a0f77b17ab"),
+    username: 'hyx',
+    icon: 'default',
+    name: 'hyx'
+  }
+]
+info send
+send scheduleData
+send todoData
+send scheduleData
+send todoData
+insert successfully
+insert successfully
+update success
+update success
+send todoData
+send scheduleData
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
+update success
