@@ -5,7 +5,7 @@ const CryptoJS = require('crypto-js')
 
 app.use(express.json())
 
-app.set('port', process.env.PORT || 3000)
+app.set('port', process.env.PORT || 4000)
 
 const encryptFunction = (str) => {
     // const CryptoJS = require('crypto-js')
