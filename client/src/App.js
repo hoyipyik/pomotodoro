@@ -171,13 +171,13 @@ const App = () => {
     const pomoTimes_d = parseInt(decryptFunction(pomoTimes))
     const chain_d = (decryptFunction(chain) === 'true')
     const push_d = (decryptFunction(push) === 'true')
-    // const subTasks_d = subTasks.map((e, index) => {
-    //   if (e) {
-    //     e.subTaskName = decryptFunction(e.subTaskName)
-    //     e.checked = (decryptFunction(e.checked) === 'true')
-    //   }
-    //   return e
-    // })
+    const subTasks_d = subTasks.map((e, index) => {
+      if (e) {
+        e.subTaskName = decryptFunction(e.subTaskName)
+        e.checked = (decryptFunction(e.checked) === 'true')
+      }
+      return e
+    })
     const item = {
       id: id,
       taskName: taskName_d,
@@ -186,7 +186,7 @@ const App = () => {
       pomoTimes: pomoTimes_d,
       chain: chain_d,
       push: push_d,
-      subTasks: subTasks,
+      subTasks: subTasks_d,
     }
     return item
   }
@@ -199,13 +199,13 @@ const App = () => {
     const pomoTimes_c = encryptFunction(String(pomoTimes))
     const chain_c = encryptFunction(chain.toString())
     const push_c = encryptFunction(push.toString())
-    // const subTasks_c = subTasks.map((e, index) => {
-    //   if (e) {
-    //     e.subTaskName = encryptFunction(e.subTaskName)
-    //     e.checked = encryptFunction((e.checked).toString())
-    //   }
-    //   return e
-    // })
+    const subTasks_c = subTasks.map((e, index) => {
+      if (e) {
+        e.subTaskName = encryptFunction(e.subTaskName)
+        e.checked = encryptFunction((e.checked).toString())
+      }
+      return e
+    })
     const item_c = {
       id: id,
       taskName: taskName_c,
@@ -214,7 +214,7 @@ const App = () => {
       pomoTimes: pomoTimes_c,
       chain: chain_c,
       push: push_c,
-      subTasks: subTasks,
+      subTasks: subTasks_c,
     }
     return item_c
   }

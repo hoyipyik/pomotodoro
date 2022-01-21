@@ -209,23 +209,21 @@ const Container = ({ pomoMode, clockMode, onlineMode,
    //
 
     const subTasksEncryptHandler = (subarray) =>{
-        // const sub = [...subarray]
-        // const sub2 = sub.map((e,index)=>{
-        //     return e
-        // })
-        // console.log(sub2)
-        // const subarray_c = sub2.map((e, index)=>{
-        //     if (e) {
-        //         const oldSubTaskName = e.subTaskName
-        //         e.subTaskName = encryptFunction(oldSubTaskName)
-        //         // console.log(e.subTaskName)
-        //         const oldeChecked = e.checked
-        //         e.checked = encryptFunction((oldeChecked).toString())
-        //       }
-        //       return e
-        // })
-        // console.log(subarray_c)
-        return subarray
+        let subarray_c = []
+        subarray.map((e, index)=>{
+            if (e) {
+                const oldSubTaskName = e.subTaskName
+                const oldChecked = e.checked
+                const oldId = e.id
+                const newItem = {
+                    id: encryptFunction(String(oldId)),
+                    subTaskName: encryptFunction(oldSubTaskName),
+                    checked: encryptFunction(oldChecked.toString()), 
+                }
+                subarray_c.push(newItem)
+              }
+        })
+        return subarray_c
     }
 
     /**
@@ -242,6 +240,7 @@ const Container = ({ pomoMode, clockMode, onlineMode,
             else {
                 console.log(value, 'value')
                 value_c = subTasksEncryptHandler([...value])
+                // value_c = [...value]
             }
             const id_c = encryptFunction(id.toString())
             const type_c = encryptFunction(type.toString())
