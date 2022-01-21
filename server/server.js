@@ -2,10 +2,17 @@ const express = require('express')
 const app = express()
 const url = 'mongodb://localhost:27017/'
 const CryptoJS = require('crypto-js')
+const https = require('https')
+const fs = require('fs')
 
 app.use(express.json())
 
 app.set('port', process.env.PORT || 3000)
+
+const options = {
+    key: fs.readFileSync('./ssl/pomotodoro.pem'),
+    cert: fs.readFileSync('./ssl/pomotodoro.crt'),
+}
 
 const encryptFunction = (str) => {
     // const CryptoJS = require('crypto-js')
@@ -393,8 +400,7 @@ app.post('/merge_todo.json', (req, res) => {
 
 })
 
-
-app.listen(app.get('port'), () => {
+https.createServer(options, app).listen(app.get('port'), () => {
     console.log("Express started on http://localhost:" +
         app.get("port") +
         " \npress Ctrl - C to terminate....")
