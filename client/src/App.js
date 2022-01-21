@@ -45,8 +45,10 @@ const App = () => {
       console.log('keep works')
       const accountData = JSON.parse(localStorage.getItem('account'))
       const accountInfoData = JSON.parse(localStorage.getItem('accountInfo'))
-      setAccount(accountData)
-      setAccountInfo(accountInfoData)
+      if (accountData)
+        setAccount(accountData)
+      if (accountInfoData)
+        setAccountInfo(accountInfoData)
       setOnlineMode(true)
     }
     return
