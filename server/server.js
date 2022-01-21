@@ -10,8 +10,8 @@ app.use(express.json())
 app.set('port', process.env.PORT || 3000)
 
 const options = {
-    key: fs.readFileSync('./ssl/pomotodoro.pem'),
-    cert: fs.readFileSync('./ssl/pomotodoro.crt'),
+    key: fs.readFileSync('./ssl/7156044_hyxmoon.cn.key'),
+    cert: fs.readFileSync('./ssl/7156044_hyxmoon.cn.pem'),
 }
 
 const encryptFunction = (str) => {
