@@ -9,9 +9,15 @@ app.use(express.json())
 
 app.set('port', process.env.PORT || 3000)
 
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+    next()
+})
+
 const options = {
-    key: fs.readFileSync('./ssl/7156044_hyxmoon.cn.key'),
-    cert: fs.readFileSync('./ssl/7156044_hyxmoon.cn.pem'),
+    key: fs.readFileSync('./ssl/7156044_hyxmoon.cn.key', 'utf-8'),
+    cert: fs.readFileSync('./ssl/7156044_hyxmoon.cn.crt', 'utf-8'),
 }
 
 const encryptFunction = (str) => {
@@ -35,11 +41,6 @@ const hashingFunction = (str) => {
     return key
 }
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*")
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-    next()
-})
 
 app.post('/deleteAccount.json', (req, res) => {
     const rawData = req.body
@@ -400,8 +401,9 @@ app.post('/merge_todo.json', (req, res) => {
 
 })
 
-https.createServer(options, app).listen(app.get('port'), () => {
-    console.log("Express started on http://localhost:" +
+// https.createServer(options, app).
+app.listen(app.get('port'), () => {
+    console.log("Express started on https://localhost:" +
         app.get("port") +
         " \npress Ctrl - C to terminate....")
 })
