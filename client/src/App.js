@@ -201,12 +201,15 @@ const App = () => {
     const pomoTimes_c = encryptFunction(String(pomoTimes))
     const chain_c = encryptFunction(chain.toString())
     const push_c = encryptFunction(push.toString())
-    const subTasks_c = subTasks.map((e, index) => {
+    let subTasks_c = []
+    subTasks.map((e, index) => {
       if (e) {
-        e.subTaskName = encryptFunction(e.subTaskName)
-        e.checked = encryptFunction((e.checked).toString())
+        const id_s = e.id
+        const subTaskName_s = encryptFunction(e.subTaskName)
+        const checked_s = encryptFunction((e.checked).toString())
+        const item = { id: id_s, subTaskName: subTaskName_s, checked: checked_s }
+        subTasks_c.push(item)
       }
-      return e
     })
     const item_c = {
       id: id,
