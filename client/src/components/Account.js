@@ -4,7 +4,7 @@ import testImg from '../images/user.png'
 import { ContextApp } from '../tools/Context'
 import Switch from '../tools/Switch'
 
-const Account = ({ modeChangeHandler, keepMode, accountPageHandler }) => {
+const Account = ({ modeChangeHandler, keepMode, accountPageHandler, refreshHandler }) => {
 
     const [signed, setSigned] = useState(false)
     const [usernameHolder, setUsernameHolder] = useState('')
@@ -108,6 +108,7 @@ const Account = ({ modeChangeHandler, keepMode, accountPageHandler }) => {
                             setSigned(true)
                             console.log('signup success')
                             ref1.current.focus()
+                            refreshHandler()
                             localStorage.setItem('signed', JSON.stringify(true))
                         }
                         setUsernameHolder('')

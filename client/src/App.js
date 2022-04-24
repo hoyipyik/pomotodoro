@@ -255,7 +255,7 @@ const App = () => {
       <ContextApp.Provider value={contextPassingValue}>
         {accountPageFlag ?
           <div className='flex'>
-            <Account modeChangeHandler={modeChangeHandler} keepMode={keepMode} accountPageHandler={accountPageHandler} />
+            <Account refreshHandler={refreshHandler} modeChangeHandler={modeChangeHandler} keepMode={keepMode} accountPageHandler={accountPageHandler} />
             <div onClick={() => accountPageHandler(false)}><Backdrop /></div>
           </div> : null}
         {settingPageFlag ?
